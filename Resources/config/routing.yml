@@ -1,0 +1,3 @@
+kilix_api_core_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: KilixApiCoreBundle:Default:index }

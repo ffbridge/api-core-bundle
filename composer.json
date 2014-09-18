@@ -1,0 +1,25 @@
+{
+    "name": "kilix/api-core-bundle",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Charles Sanquer",
+            "email": "csanquer@kilix.fr"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Kilix\\Bundle\\ApiCoreBundle\\": ""
+        }
+    },
+    "require": {
+        "symfony/framework-bundle": "~2.4"
+    },
+    "require-dev": {
+        "symfony/assetic-bundle": "~2.3",
+        "symfony/symfony": "~2.4",
+        "phpunit/phpunit": "~4.2"
+    }
+}

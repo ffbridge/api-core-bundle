@@ -1,0 +1,3 @@
+example_api:
+    path:     /example/api/ws
+    defaults: { _controller: ExampleBundle:Api:ws , _api_bag: Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleApiParameterBag }

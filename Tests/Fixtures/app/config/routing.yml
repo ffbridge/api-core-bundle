@@ -1,0 +1,2 @@
+example_bundle:
+    resource: "@ExampleBundle/Resources/config/routing.yml"
