@@ -30,3 +30,4 @@ catalog.xml
 composer.lock
 coverage
 phpunit.xml
+cache.properties
