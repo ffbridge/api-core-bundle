@@ -3,24 +3,4 @@ Kilix ApiCoreBundle
 
 Common Bundle to handle standard Api REST Webservice
 
-Install
--------
-
-* Add the kilix composer repository to `composer.json`
-
-```json
-{
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "http://composer.kilix.net"
-        }
-    ]
-}
-```
-
-* Then add the bundle to dependencies
-
-```sh
-php composer.phar require kilix/api-core-bundle=*
-```
+For Installation and Usage, see [Resources/doc/index.md](http://gitlab.kilix.net/kilix/api-core-bundle/tree/master/Resources/doc/index.md)
