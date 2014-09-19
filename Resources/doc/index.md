@@ -20,7 +20,7 @@ Installation
 * add the bundle to dependencies
 
 ```sh
-php composer.phar require kilix/api-core-bundle=dev-master
+php composer.phar require kilix/api-core-bundle=~0.1
 ```
 * then enable the bundle in the kernel in `app/AppKernel.php`
 
