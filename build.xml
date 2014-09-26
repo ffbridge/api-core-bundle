@@ -24,6 +24,53 @@
         <property name="prepare.done" value="true"/>
     </target>
 
+    <!-- composer -->
+    <property name="composer.allow-update" value="true"/>
+
+    <target name="composer-exists" description="Check that composer exists">
+        <available property="composer.exists" file="${basedir}/composer.phar" />
+    </target>
+
+    <target name="composer-self-update" unless="composer.installed" description="Self-update Composer">
+        <echo message="Self-updating composer" level="debug"/>
+        <exec executable="php">
+            <arg value="${basedir}/composer.phar" />
+            <arg value="self-update" />
+            <arg value="--quiet" />
+            <arg value="--no-interaction" />
+        </exec>
+        <echo message="composer self-update complete" level="debug"/>
+    </target>
+
+    <target name="composer-self-install" unless="composer.exists" depends='composer-exists' description="Fetch Composer if it doesn't exist">
+        <echo message="Self-installing composer" level="debug"/>
+        <property name="composer.installed" value="true"/>
+        <property name="composer.exists" value="true" />
+        <exec executable="/bin/bash">
+            <arg value="-c" />
+            <arg value="curl -s https://getcomposer.org/installer | php" />
+        </exec>
+        <echo message="composer self-install complete" level="debug"/>
+    </target>
+
+    <target name="composer" depends="composer-self-install, composer-self-update" if="composer.exists">
+        <condition property="composer.command" value="update" else="install">
+            <and>
+                <istrue value="${composer.allow-update}"/>
+                <available file="composer.lock"/>
+            </and>
+        </condition>
+        <echo message="Beginning composer ${composer.command}" level="debug" />
+        <exec executable="php">
+            <arg value="${basedir}/composer.phar" />
+            <arg value="${composer.command}" />
+            <arg value="--no-interaction" />
+            <arg value="--optimize-autoloader" />
+            <arg value="--dev" />
+        </exec>
+        <echo message="composer ${composer.command} complete" level="debug"/>
+    </target>
+
     <target name="lint" description="Perform syntax check of sourcecode files">
         <apply executable="php" failonerror="true">
             <arg value="-l"/>
@@ -50,7 +97,7 @@
     </target>
 
     <target name="phpunit"
-            depends="prepare"
+            depends="prepare, composer"
             description="Run unit tests with PHPUnit">
         <exec executable="phpunit" failonerror="true">
             <arg value="--log-junit"/>
