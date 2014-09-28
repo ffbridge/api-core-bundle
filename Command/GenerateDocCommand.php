@@ -26,7 +26,13 @@ class GenerateDocCommand extends ContainerAwareCommand
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command generate API Documentation.
 
-<info>php %command.full_name% web</info>
+<info>php %command.full_name% doc/api_doc.md web/doc/index.html</info>
+
+generate documentation with default template to <comment>web/doc/index.html</comment>
+
+<info>php %command.full_name% -t slate doc/api_doc.md web/doc/index.html</info>
+
+generate documentation with slate template
 EOF
             )
         ;
