@@ -18,7 +18,7 @@ class ApiParametersListenerTest extends \PHPUnit_Framework_TestCase
         $request->attributes->set('_api_bag', $apiBagClass);
 
         // create event mock
-        $event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\\GetResponseEvent')
+        $event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\\FilterControllerEvent')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -36,7 +36,7 @@ class ApiParametersListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($request->attributes->has('api_parameters'));
         $this->assertTrue($request->attributes->has('_api_bag'));
 
-        $listener->onKernelRequest($event);
+        $listener->onKernelController($event);
 
         $this->assertfalse($request->attributes->has('_api_bag'));
         $this->assertTrue($request->attributes->has('api_parameters'));

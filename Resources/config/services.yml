@@ -5,4 +5,4 @@ services:
     kilix_api_core.example:
         class: %kilix_api_core.api_paramaters_listener.class%
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

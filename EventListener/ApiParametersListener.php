@@ -3,12 +3,12 @@
 namespace Kilix\Bundle\ApiCoreBundle\EventListener;
 
 use Kilix\Bundle\ApiCoreBundle\Request\ApiParameterBag;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernel;
 
 class ApiParametersListener
 {
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelController(FilterControllerEvent $event)
     {
         $request = $event->getRequest();
         if ($request->attributes->has('_api_bag')) {
