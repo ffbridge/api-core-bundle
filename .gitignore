@@ -31,3 +31,4 @@ composer.lock
 coverage
 phpunit.xml
 cache.properties
+Tests/Fixtures/web/
