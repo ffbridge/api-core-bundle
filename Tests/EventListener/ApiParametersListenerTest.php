@@ -2,13 +2,14 @@
 
 namespace Kilix\Bundle\ApiCoreBundle\Tests\EventListener;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Kilix\Bundle\ApiCoreBundle\EventListener\ApiParametersListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class ApiParametersListenerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testOnKernelRequest()
+    public function testOnKernelController()
     {
         // prepare request fixture
         $request = new Request();
@@ -31,7 +32,7 @@ class ApiParametersListenerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
 
         // test listener
-        $listener = new ApiParametersListener();
+        $listener = new ApiParametersListener(new AnnotationReader());
 
         $this->assertFalse($request->attributes->has('api_parameters'));
         $this->assertTrue($request->attributes->has('_api_bag'));

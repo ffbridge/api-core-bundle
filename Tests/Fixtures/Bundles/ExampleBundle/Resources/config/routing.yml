@@ -1,3 +1,7 @@
 example_api:
-    path:     /example/api/ws
+    path:     /example/api/ws-route
     defaults: { _controller: ExampleBundle:Api:ws , _api_bag: Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleApiParameterBag }
+
+example2_api:
+    path:     /example/api/ws-annotations
+    defaults: { _controller: ExampleBundle:Api:ws2 }

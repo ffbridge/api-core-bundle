@@ -2,7 +2,8 @@ parameters:
     kilix_api_core.api_paramaters_listener.class: Kilix\Bundle\ApiCoreBundle\EventListener\ApiParametersListener
 
 services:
-    kilix_api_core.example:
+    kilix_api_core.api_paramaters_listener:
         class: %kilix_api_core.api_paramaters_listener.class%
+        arguments: [@annotation_reader]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
