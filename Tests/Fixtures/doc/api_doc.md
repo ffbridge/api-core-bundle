@@ -1,3 +1,5 @@
+
+## FROM FILE : /var/www/api-core-bundle/Tests/Fixtures/doc/api_doc_old.md
 FORMAT: 1A
 HOST: https://api.mywebsite.com
 
@@ -54,6 +56,7 @@ Note list description
                 }
             ]
 
+## FROM FILE : /var/www/api-core-bundle/Tests/Fixtures/doc/docBundle1.md
 ### Get Notes [GET]
 Get a list of notes.
 
@@ -91,6 +94,7 @@ Create a new note
                 "error": "Invalid title"
             }
 
+## FROM FILE : /var/www/api-core-bundle/Tests/Fixtures/doc/docBundle2.md
 ## Note [/notes/{id}]
 Note description
 
@@ -168,6 +172,7 @@ Update a single note
                 "error": "Note not found"
             }
 
+## FROM FILE : /var/www/api-core-bundle/Tests/Fixtures/doc/docBundle3.md
 ### Delete a Note [DELETE]
 Delete a single note
 
@@ -256,6 +261,7 @@ A list of users
                 }
             }
 
+## FROM FILE : /var/www/api-core-bundle/Tests/Fixtures/doc/docBundle4.md
 ### Get users [GET]
 Get a list of users. Example:
 
