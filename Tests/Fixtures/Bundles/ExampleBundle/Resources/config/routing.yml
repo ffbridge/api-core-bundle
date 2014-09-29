@@ -1,3 +1,15 @@
 example_api:
-    path:     /example/api/ws
+    path:     /example/api/ws-route
     defaults: { _controller: ExampleBundle:Api:ws , _api_bag: Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleApiParameterBag }
+
+example2_api:
+    path:     /example/api/ws-annotations
+    defaults: { _controller: ExampleBundle:Api:ws2 }
+
+example3_api:
+    path:     /example/api/ws-route-validation
+    defaults: { _controller: ExampleBundle:Api:ws , _api_bag: Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleApiParameterBag, _api_validation: true }
+
+example4_api:
+    path:     /example/api/ws-annotations-validation
+    defaults: { _controller: ExampleBundle:Api:ws3 }

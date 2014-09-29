@@ -8,7 +8,7 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="vendor/autoload.php"
+         bootstrap="Tests/autoload.php"
         >
     <testsuites>
         <testsuite name="Kilix ApiCoreBundle Test Suite">

@@ -7,6 +7,7 @@ framework:
     default_locale:  en
     translator:      { fallback: en }
     profiler:        { only_exceptions: false }
+    validation:      { enabled: true, enable_annotations: true }
 
 
 kilix_api_core:
