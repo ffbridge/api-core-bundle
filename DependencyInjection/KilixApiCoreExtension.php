@@ -24,5 +24,7 @@ class KilixApiCoreExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        $container->setParameter('kilix_api_core.aglio_bin', $config['aglio_bin']);
     }
 }
