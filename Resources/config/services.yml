@@ -4,6 +4,6 @@ parameters:
 services:
     kilix_api_core.api_paramaters_listener:
         class: %kilix_api_core.api_paramaters_listener.class%
-        arguments: [@annotation_reader]
+        arguments: [@annotation_reader, @validator]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

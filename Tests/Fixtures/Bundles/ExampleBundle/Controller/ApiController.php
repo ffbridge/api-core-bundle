@@ -27,4 +27,16 @@ class ApiController extends Controller
 
         return new JsonResponse($apiParameters->all());
     }
+
+    /**
+     * @ApiParameters(bag="Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleApiParameterBag", validation=true)
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function ws3Action(Request $request)
+    {
+        $apiParameters = $request->attributes->get('api_parameters');
+
+        return new JsonResponse($apiParameters->all());
+    }
 }
