@@ -51,18 +51,20 @@ EOF
             $directory = $projectDir.'/'.$directory;
             if(!$fs->exists($directory))
             {
-                throw new \InvalidArgumentException('Input file '.$directory.' doesn\'t exists');
+                throw new \InvalidArgumentException('Output concat directory '.$directory.' doesn\'t exists');
             }
         }
         $finalDocPath = $input->getArgument('input');
         $fs->remove($projectDir.'/'.$finalDocPath);
-        foreach ($finder->in($directory)->files()->name('*.md')->notName(basename($finalDocPath))->sortByName() as $file)
+        $finder->in($projectDir.'/Bundles');
+        foreach ($finder->files()->name('*.md')->notName(basename($finalDocPath))->sortByName() as $file)
         {
             $currentDocFileContent = $file->getContents();
-            $separationSentences = PHP_EOL;
-            $separationSentences .= '## FROM FILE : ' . $file->getRealpath();
-            $separationSentences .= PHP_EOL;
-            $separationSentences .= PHP_EOL;
+            $separationSentences = '
+
+## FROM FILE :' . $file->getRealpath() . '
+                    
+';
             file_put_contents($projectDir.'/'.$finalDocPath, $separationSentences, FILE_APPEND);
             file_put_contents($projectDir.'/'.$finalDocPath, $currentDocFileContent, FILE_APPEND);
         }
@@ -78,12 +80,12 @@ EOF
 
             $inputBlueprint = $input->getArgument('input');
 
-            if(!$fs->exists($inputBlueprint)) {
+/*            if(!$fs->exists($inputBlueprint)) {
                 $inputBlueprint = $projectDir.'/'.$inputBlueprint;
                 if(!$fs->exists($inputBlueprint)) {
                     throw new \InvalidArgumentException('Input file '.$inputBlueprint.' doesn\'t exists');
                 }
-            }
+            }*/
 
             $outputHtml = $projectDir.'/'.$input->getArgument('output');
             $outputHtmlDir = dirname($outputHtml);

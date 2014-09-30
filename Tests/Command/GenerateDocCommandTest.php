@@ -54,7 +54,7 @@ class GenerateDocCommandTest extends WebTestCase
         $this->assertRegExp('#API Documentation generated to '.$rootDir.'/web/doc/index.html#', $commandTester->getDisplay());
     }
 
-    public function testExecuteInexistentInputFile()
+/*    public function testExecuteInexistentInputFile()
     {
         $rootDir = realpath(static::$kernel->getRootDir().'/../');
 
@@ -73,6 +73,27 @@ class GenerateDocCommandTest extends WebTestCase
 
         $this->assertFileNotExists($rootDir.'/web/doc/index.html');
         $this->assertRegExp('#API Documentation generation failed :\s*Input file '.$rootDir.'/foobar.md doesn\'t exists#', $commandTester->getDisplay());
+    }*/
+
+    public function testExecuteInexistentConcatOutputDirectory()
+    {
+        $rootDir = realpath(static::$kernel->getRootDir().'/../');
+
+        $fs = new Filesystem();
+        $fs->remove($rootDir.'/web/doc');
+
+        $application = new Application(static::$kernel);
+        $application->add(new GenerateDocCommand());
+
+        $command = $application->find('api:generate:doc');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(array(
+                'command' => $command->getName(),
+                'directory' => 'foobar'
+            ));
+
+        $this->assertFileNotExists($rootDir.'/web/doc/index.html');
+        $this->assertRegExp('#API Documentation generation failed :\s*Output concat directory '.$rootDir.'/foobar doesn\'t exists#', $commandTester->getDisplay());
     }
 
     public function testExecuteAglioFailed()
