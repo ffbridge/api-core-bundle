@@ -1,6 +1,6 @@
 <?php
 
-namespace Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\DependencyInjection;
+namespace Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle2\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;

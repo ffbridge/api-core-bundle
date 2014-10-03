@@ -20,10 +20,14 @@ class GenerateDocCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('api:generate:doc')
+            ->setAliases(array(
+                'generate:api:doc',
+            ))
             ->setDescription('generate HTML API documentation from API blueprint markdown with Aglio')
-            ->addArgument('input', InputArgument::OPTIONAL, 'input blueprint markdown file', 'doc/api_doc.md')
-            ->addArgument('directory', InputArgument::OPTIONAL, 'Generate docs from which folder', 'doc')
+            ->addArgument('input', InputArgument::OPTIONAL, 'main or first blueprint markdown file', 'doc/api_doc.md')
             ->addArgument('output', InputArgument::OPTIONAL, 'output HTML file', 'web/doc/index.html')
+            ->addOption('bundles', 'b',InputOption::VALUE_NONE, 'scan and concatenate blueprint files in bundles ressources directories')
+            ->addOption('resources-dir', 'd',InputOption::VALUE_REQUIRED, 'directory in bundle ressource to concatenate', 'doc/api')
             ->addOption('template', 't', InputOption::VALUE_REQUIRED, 'template ', 'default')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command generate API Documentation.
@@ -32,60 +36,48 @@ The <info>%command.name%</info> command generate API Documentation.
 
 generate documentation with default template to <comment>web/doc/index.html</comment>
 
-<info>php %command.full_name% -t slate doc/api_doc.md web/doc/index.html</info>
+<info>php %command.full_name% --template=slate doc/api_doc.md web/doc/index.html</info>
 
 generate documentation with slate template
+
+<info>php %command.full_name% --bundles doc/api_head_doc.md web/doc/index.html</info>
+
+generate documentation by file concatenation from bundles Resources/<comment>doc/api</comment> directories, <info>doc/api_head_doc.md</info> is used as blueprint header
+
+<info>php %command.full_name% --bundles --resources-dir=doc/blueprint doc/api_head_doc.md web/doc/index.html</info>
+
+generate documentation by file concatenation from bundles ressources/<comment>doc/blueprint</comment> directories
+
 EOF
             )
         ;
     }
 
-    protected function concatDocFiles(InputInterface $input)
-    {
-        $fs = new Filesystem();
-        $finder = new Finder();
-        $directory = $input->getArgument('directory');
-        $projectDir = realpath($this->getContainer()->get('kernel')->getRootDir().'/..');
-        if(!$fs->exists($directory)) 
-        {
-            $directory = $projectDir.'/'.$directory;
-            if(!$fs->exists($directory))
-            {
-                throw new \InvalidArgumentException('Output concat directory '.$directory.' doesn\'t exists');
-            }
-        }
-        $finalDocPath = $input->getArgument('input');
-        $fs->remove($projectDir.'/'.$finalDocPath);
-        $finder->in($projectDir.'/Bundles');
-        foreach ($finder->files()->name('*.md')->notName(basename($finalDocPath))->sortByName() as $file)
-        {
-            $currentDocFileContent = $file->getContents();
-            $separationSentences = '
-
-## FROM FILE :' . $file->getRealpath() . '
-                    
-';
-            file_put_contents($projectDir.'/'.$finalDocPath, $separationSentences, FILE_APPEND);
-            file_put_contents($projectDir.'/'.$finalDocPath, $currentDocFileContent, FILE_APPEND);
-        }
-    }
-    
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $this->concatDocFiles($input);
             $fs = new Filesystem();
+
+            $mainBlueprint = $input->getArgument('input');
 
             $projectDir = realpath($this->getContainer()->get('kernel')->getRootDir().'/..');
 
-            $inputBlueprint = $input->getArgument('input');
-
-/*            if(!$fs->exists($inputBlueprint)) {
-                $inputBlueprint = $projectDir.'/'.$inputBlueprint;
-                if(!$fs->exists($inputBlueprint)) {
-                    throw new \InvalidArgumentException('Input file '.$inputBlueprint.' doesn\'t exists');
+            if(!$fs->exists($mainBlueprint)) {
+                $mainBlueprint = $projectDir.'/'.$mainBlueprint;
+                if(!$fs->exists($mainBlueprint)) {
+                    throw new \InvalidArgumentException('Main Input file '.$mainBlueprint.' doesn\'t exists');
                 }
-            }*/
+            }
+
+            $useBundles = $input->getOption('bundles');
+            $resourceDir = $input->getOption('resources-dir');
+
+            $inputBlueprint = $useBundles ? $this->concatDocFiles($mainBlueprint, $resourceDir, $projectDir, $output) : $mainBlueprint;
 
             $outputHtml = $projectDir.'/'.$input->getArgument('output');
             $outputHtmlDir = dirname($outputHtml);
@@ -99,7 +91,12 @@ EOF
                 $template = 'default';
             }
 
-            echo $this->executeAglioCommand('-t '.$template.' -i '.$inputBlueprint.' -o '.$outputHtml)->getOutput();
+            $output->writeln($this->executeAglioCommand('-t '.$template.' -i '.$inputBlueprint.' -o '.$outputHtml)->getOutput());
+
+            if ($useBundles && $mainBlueprint != $inputBlueprint) {
+                $fs->remove($inputBlueprint);
+            }
+
             $output->writeln('API Documentation generated to <info>'.$outputHtml.'<info>');
         } catch(\Exception $e) {
             $output->writeln('<error>API Documentation generation failed : </error>');
@@ -107,6 +104,62 @@ EOF
         }
     }
 
+    /**
+     * @param string $mainFile
+     * @param string $resourceDir
+     * @param string $projectDir
+     * @param OutputInterface $output
+     * @return string
+     */
+    protected function concatDocFiles($mainFile, $resourceDir, $projectDir, OutputInterface $output)
+    {
+        $fs = new Filesystem();
+        $finder = new Finder();
+
+        $bundles = $this->getContainer()->get('kernel')->getBundles();
+        $dirToScan = array();
+        foreach ($bundles as $bundle) {
+            $dir = $bundle->getPath().'/Resources/'.$resourceDir;
+            if ($fs->exists($dir)) {
+                $dirToScan[] = $dir;
+            }
+        }
+
+        if (empty($dirToScan)) {
+            return $mainFile;
+        }
+
+        $finder
+            ->files()
+            ->name('*.md')
+            ->sortByName();
+
+        $finder->in($dirToScan);
+
+        $tempFile = tempnam(sys_get_temp_dir(), 'api');
+        if($fs->exists($mainFile))
+        {
+            file_put_contents($tempFile, file_get_contents($mainFile));
+        }
+
+        foreach ($finder as $file)
+        {
+            $relativePath  = $fs->makePathRelative($file->getRealpath() ,$projectDir);
+            $output->writeln('concatenate '.$relativePath);
+            file_put_contents(
+                $tempFile,
+                "\n\n<!-- From file".$relativePath." -->\n\n".$file->getContents()
+                , FILE_APPEND);
+        }
+
+        $fs->rename($tempFile, $tempFile.'.md');
+
+        return $tempFile.'.md';
+    }
+
+    /**
+     * @return array
+     */
     protected function getAvailableTemplates()
     {
         $process = $this->executeAglioCommand('-l');
