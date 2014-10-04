@@ -4,7 +4,6 @@ namespace Kilix\Bundle\ApiCoreBundle\Tests\DependencyInjection;
 
 use Kilix\Bundle\ApiCoreBundle\DependencyInjection\KilixApiCoreExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 
 class KilixApiCoreExtensionTest extends \PHPUnit_Framework_TestCase
 {

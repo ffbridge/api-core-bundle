@@ -8,7 +8,6 @@ use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Kilix\Bundle\ApiCoreBundle\Annotations\ApiParameters;
-use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ApiParametersListener
@@ -69,7 +68,7 @@ class ApiParametersListener
                 $errors = $this->validator->validate($apiParameterBag);
                 if (count($errors) > 0) {
                     $errorsList = array();
-                    foreach($errors as $error) {
+                    foreach ($errors as $error) {
                         $key = preg_replace('/parameters\[(.+)\]/', '$1',$error->getPropertyPath());
 
                         $errorsList[$key] = $error->getMessage();

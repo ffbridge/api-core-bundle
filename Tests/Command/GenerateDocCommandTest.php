@@ -130,7 +130,6 @@ class GenerateDocCommandTest extends WebTestCase
 
         $application = new Application(static::$kernel);
 
-
         $application->add(new GenerateDocCommand());
 
         $command = $application->find('api:generate:doc');
@@ -144,4 +143,3 @@ class GenerateDocCommandTest extends WebTestCase
         $this->assertRegExp('#API Documentation generation failed :\s*Aglio Error#', $commandTester->getDisplay());
     }
 }
- 

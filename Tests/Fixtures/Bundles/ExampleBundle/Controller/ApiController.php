@@ -18,7 +18,7 @@ class ApiController extends Controller
 
     /**
      * @ApiParameters(bag="Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleApiParameterBag")
-     * @param Request $request
+     * @param  Request      $request
      * @return JsonResponse
      */
     public function ws2Action(Request $request)
@@ -30,7 +30,7 @@ class ApiController extends Controller
 
     /**
      * @ApiParameters(bag="Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleApiParameterBag", validation=true)
-     * @param Request $request
+     * @param  Request      $request
      * @return JsonResponse
      */
     public function ws3Action(Request $request)

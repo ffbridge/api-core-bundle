@@ -41,4 +41,4 @@ class ApiErrorController extends Controller
 
         return $response;
     }
-} 
+}
