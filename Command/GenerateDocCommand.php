@@ -77,6 +77,12 @@ EOF
             $useBundles = $input->getOption('bundles');
             $resourceDir = $input->getOption('resources-dir');
 
+            if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                $output->writeln(
+                    'Generate API documentation from ' . ($useBundles ? 'main' : '') . ' file <info>' . $mainBlueprint . '</info>'
+                );
+            }
+
             $inputBlueprint = $useBundles ? $this->concatDocFiles($mainBlueprint, $resourceDir, $projectDir, $output) : $mainBlueprint;
 
             $outputHtml = $projectDir.'/'.$input->getArgument('output');
@@ -87,11 +93,11 @@ EOF
             }
 
             $template = $input->getOption('template');
-            if (!in_array($template, $this->getAvailableTemplates())) {
+            if (!in_array($template, $this->getAvailableTemplates($output))) {
                 $template = 'default';
             }
 
-            $output->writeln($this->executeAglioCommand('-t '.$template.' -i '.$inputBlueprint.' -o '.$outputHtml)->getOutput());
+            $output->writeln($this->executeAglioCommand('-t '.$template.' -i '.$inputBlueprint.' -o '.$outputHtml, $output)->getOutput());
 
             if ($useBundles && $mainBlueprint != $inputBlueprint) {
                 $fs->remove($inputBlueprint);
@@ -145,11 +151,10 @@ EOF
         foreach ($finder as $file)
         {
             $relativePath  = $fs->makePathRelative($file->getRealpath() ,$projectDir);
-            $output->writeln('concatenate '.$relativePath);
-            file_put_contents(
-                $tempFile,
-                "\n\n<!-- From file".$relativePath." -->\n\n".$file->getContents()
-                , FILE_APPEND);
+            if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
+                $output->writeln('concatenate <comment>' . $relativePath . '</comment>');
+            }
+            file_put_contents($tempFile, "\n\n".$file->getContents(), FILE_APPEND);
         }
 
         $fs->rename($tempFile, $tempFile.'.md');
@@ -158,21 +163,27 @@ EOF
     }
 
     /**
+     * @param OutputInterface $output
      * @return array
      */
-    protected function getAvailableTemplates()
+    protected function getAvailableTemplates(OutputInterface $output)
     {
-        $process = $this->executeAglioCommand('-l');
+        $process = $this->executeAglioCommand('-l', $output);
         return explode("\n", trim(str_ireplace('Templates:', '', $process->getOutput())));
     }
 
     /**
      * @param string $command
+     * @param OutputInterface $output
      * @return Process
      */
-    protected function executeAglioCommand($command)
+    protected function executeAglioCommand($command, OutputInterface $output)
     {
         $aglioBin = $this->getContainer()->getParameter('kilix_api_core.aglio_bin');
+
+        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_DEBUG) {
+            $output->writeln('Executing <info>'.$aglioBin.' '.$command.'</info>');
+        }
 
         $process = new Process($aglioBin.' '.$command);
         $process->run();

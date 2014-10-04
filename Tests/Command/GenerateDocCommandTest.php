@@ -4,6 +4,7 @@ namespace Kilix\Bundle\ApiCoreBundle\Tests\Command;
 
 use Kilix\Bundle\ApiCoreBundle\Command\GenerateDocCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
@@ -90,6 +91,8 @@ class GenerateDocCommandTest extends WebTestCase
         $commandTester->execute(array(
                 'command' => $command->getName(),
                 '--bundles' => true,
+            ), array(
+                'verbosity' => OutputInterface::VERBOSITY_DEBUG,
             ));
 
         $this->assertFileExists($rootDir.'/web/doc/index.html');
