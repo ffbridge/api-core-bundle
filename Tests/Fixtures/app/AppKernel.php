@@ -12,6 +12,7 @@ class AppKernel extends Kernel
             // register the other bundles your tests depend on
             new Kilix\Bundle\ApiCoreBundle\KilixApiCoreBundle(),
             new \Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\ExampleBundle(),
+            new \Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle2\ExampleBundle2(),
         );
     }
 
