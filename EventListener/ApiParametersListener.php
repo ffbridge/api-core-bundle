@@ -6,10 +6,8 @@ use Kilix\Bundle\ApiCoreBundle\Controller\ApiErrorController;
 use Kilix\Bundle\ApiCoreBundle\Request\ApiParameterBag;
 use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\HttpKernel;
 use Kilix\Bundle\ApiCoreBundle\Annotations\ApiParameters;
-use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\ValidatorInterface;
 
 class ApiParametersListener
 {
