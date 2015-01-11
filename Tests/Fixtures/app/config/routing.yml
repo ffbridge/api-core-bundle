@@ -1,2 +1,5 @@
+kilix_api_core_bundle:
+    resource: "@KilixApiCoreBundle/Resources/config/routing.yml"
+
 example_bundle:
     resource: "@ExampleBundle/Resources/config/routing.yml"

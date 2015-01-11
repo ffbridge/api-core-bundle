@@ -57,7 +57,7 @@ slate');
         } else {
             $fs = new Filesystem();
             $fs->remove($input->getOption('output'));
-            $fs->touch($input->getOption('output'));
+            $fs->dumpFile($input->getOption('output'), 'api doc generated');
         }
     }
 }
