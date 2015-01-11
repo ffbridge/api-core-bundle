@@ -1,7 +1,13 @@
 parameters:
     kilix_api_core.api_paramaters_listener.class: Kilix\Bundle\ApiCoreBundle\EventListener\ApiParametersListener
+    kilix_api_core.aglio.class: Kilix\Bundle\ApiCoreBundle\Tools\AglioHandler
 
 services:
+    kilix_api_core.aglio:
+        class: %kilix_api_core.aglio.class%
+        arguments: [%kilix_api_core.aglio_bin%, @kernel]
+
+
     kilix_api_core.api_paramaters_listener:
         class: %kilix_api_core.api_paramaters_listener.class%
         arguments: [@annotation_reader, @validator]

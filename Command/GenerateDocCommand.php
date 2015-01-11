@@ -75,12 +75,12 @@ EOF
     {
         try {
             $fs = new Filesystem();
-
-            $mainBlueprint = $input->getArgument('input');
+            $aglio = $this->getContainer()->get('kilix_api_core.aglio');
 
             $projectDir = realpath($this->getContainer()->get('kernel')->getRootDir().'/..');
 
-            if (!$fs->exists($mainBlueprint)) {
+            $mainBlueprint = $input->getArgument('input');
+            if(!$fs->exists($mainBlueprint)) {
                 $mainBlueprint = $projectDir.'/'.$mainBlueprint;
                 if (!$fs->exists($mainBlueprint)) {
                     throw new \InvalidArgumentException('Main Input file '.$mainBlueprint.' doesn\'t exists');
@@ -96,124 +96,15 @@ EOF
                 );
             }
 
-            $inputBlueprint = $useBundles ? $this->concatDocFiles(
-                $mainBlueprint,
-                $resourceDir,
-                $projectDir,
-                $output
-            ) : $mainBlueprint;
-
             $outputHtml = $projectDir.'/'.$input->getArgument('output');
-            $outputHtmlDir = dirname($outputHtml);
-
-            if (!$fs->exists($outputHtmlDir)) {
-                $fs->mkdir($outputHtmlDir);
-            }
-
             $template = $input->getOption('template');
-            if (!in_array($template, $this->getAvailableTemplates($output))) {
-                $template = 'default';
-            }
 
-            $output->writeln(
-                $this->executeAglioCommand(
-                    '-t '.$template.' -i '.$inputBlueprint.' -o '.$outputHtml,
-                    $output
-                )->getOutput()
-            );
-
-            if ($useBundles && $mainBlueprint != $inputBlueprint) {
-                $fs->remove($inputBlueprint);
-            }
+            $output->writeln($aglio->generateDoc($mainBlueprint, $outputHtml, $useBundles, $resourceDir, $template, $output));
 
             $output->writeln('API Documentation generated to <info>'.$outputHtml.'<info>');
         } catch (\Exception $e) {
             $output->writeln('<error>API Documentation generation failed : </error>');
             $output->writeln('<error>'.$e->getMessage().'</error>');
         }
-    }
-
-    /**
-     * @param  string          $mainFile
-     * @param  string          $resourceDir
-     * @param  string          $projectDir
-     * @param  OutputInterface $output
-     * @return string
-     */
-    protected function concatDocFiles($mainFile, $resourceDir, $projectDir, OutputInterface $output)
-    {
-        $fs = new Filesystem();
-        $finder = new Finder();
-
-        $bundles = $this->getContainer()->get('kernel')->getBundles();
-        $dirToScan = array();
-        foreach ($bundles as $bundle) {
-            $dir = $bundle->getPath().'/Resources/'.$resourceDir;
-            if ($fs->exists($dir)) {
-                $dirToScan[] = $dir;
-            }
-        }
-
-        if (empty($dirToScan)) {
-            return $mainFile;
-        }
-
-        $finder
-            ->files()
-            ->name('*.md')
-            ->sortByName();
-
-        $finder->in($dirToScan);
-
-        $tempFile = tempnam(sys_get_temp_dir(), 'api');
-        if ($fs->exists($mainFile)) {
-            file_put_contents($tempFile, file_get_contents($mainFile));
-        }
-
-        foreach ($finder as $file) {
-            $relativePath = $fs->makePathRelative($file->getRealpath(), $projectDir);
-            if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
-                $output->writeln('concatenate <comment>'.$relativePath.'</comment>');
-            }
-            file_put_contents($tempFile, "\n\n".$file->getContents(), FILE_APPEND);
-        }
-
-        $fs->rename($tempFile, $tempFile.'.md');
-
-        return $tempFile.'.md';
-    }
-
-    /**
-     * @param  OutputInterface $output
-     * @return array
-     */
-    protected function getAvailableTemplates(OutputInterface $output)
-    {
-        $process = $this->executeAglioCommand('-l', $output);
-
-        return explode("\n", trim(str_ireplace('Templates:', '', $process->getOutput())));
-    }
-
-    /**
-     * @param  string          $command
-     * @param  OutputInterface $output
-     * @return Process
-     */
-    protected function executeAglioCommand($command, OutputInterface $output)
-    {
-        $aglioBin = $this->getContainer()->getParameter('kilix_api_core.aglio_bin');
-
-        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_DEBUG) {
-            $output->writeln('Executing <info>'.$aglioBin.' '.$command.'</info>');
-        }
-
-        $process = new Process($aglioBin.' '.$command);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
-
-        return $process;
     }
 }
