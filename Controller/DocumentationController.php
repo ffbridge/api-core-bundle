@@ -16,7 +16,7 @@ class DocumentationController extends Controller
 
         $index = $kernel->getRootDir().'/../web/doc/index.html';
         if (!$fs->exists($index)) {
-            $aglio = $this->container->get('kilix_api_core.aglio');
+            $aglio = $this->container->get('kilix_api_core.blueprint_manager');
             $aglio->generateDoc($kernel->getRootDir().'/../doc/api_doc.md', $index, true, 'doc/api', 'default');
         }
 

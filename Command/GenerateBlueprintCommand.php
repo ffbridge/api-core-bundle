@@ -12,22 +12,29 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Class GenerateDocCommand
+ * Class GenerateBlueprintCommand
  * @package Kilix\Bundle\ApiCoreBundle\Command
  */
-class GenerateDocCommand extends ContainerAwareCommand
+class GenerateBlueprintCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('api:generate:doc')
+        $this->setName('api:generate:blueprint')
             ->setAliases(
                 array(
-                    'generate:api:doc',
+                    'generate:api:blueprint',
                 )
             )
-            ->setDescription('generate HTML API documentation from API blueprint markdown with Aglio')
+            ->setDescription('generate Blueprint Abstract Syntax Tree from API blueprint markdown with snowcrash')
             ->addArgument('input', InputArgument::OPTIONAL, 'main or first blueprint markdown file', 'doc/api_doc.md')
-            ->addArgument('output', InputArgument::OPTIONAL, 'output HTML file', 'web/doc/index.html')
+            ->addArgument('output', InputArgument::OPTIONAL, 'output Blueprint file', 'doc/blueprint.json')
+            ->addOption(
+                'format',
+                'f',
+                InputOption::VALUE_REQUIRED,
+                'Blueprint Format',
+                'json'
+            )
             ->addOption(
                 'no-scan',
                 'c',
@@ -41,24 +48,15 @@ class GenerateDocCommand extends ContainerAwareCommand
                 'directory in bundle ressource to concatenate',
                 'doc/api'
             )
-            ->addOption('template', 't', InputOption::VALUE_REQUIRED, 'template ', 'default')
             ->setHelp(
                 <<<EOF
-                The <info>%command.name%</info> command generate API Documentation.
+                The <info>%command.name%</info> command generate Blueprint JSON.
 
-<info>php %command.full_name% doc/api_doc.md web/doc/index.html</info>
-
-generate documentation with default template to <comment>web/doc/index.html</comment>
-
-<info>php %command.full_name% --template=slate doc/api_doc.md web/doc/index.html</info>
-
-generate documentation with slate template
-
-<info>php %command.full_name% doc/api_head_doc.md web/doc/index.html</info>
+<info>php %command.full_name% doc/api_doc.md doc/blueprint.json</info>
 
 generate documentation by file concatenation from bundles Resources/<comment>doc/api</comment> directories, <info>doc/api_head_doc.md</info> is used as blueprint header
 
-<info>php %command.full_name% --resources-dir=doc/blueprint doc/api_head_doc.md web/doc/index.html</info>
+<info>php %command.full_name% --bundles --resources-dir=doc/blueprint doc/api_head_doc.md doc/blueprint.json</info>
 
 EOF
             );
@@ -90,18 +88,18 @@ EOF
 
             if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
                 $output->writeln(
-                    'Generate API documentation from '.($useBundles ? 'main' : '').' file <info>'.$mainBlueprint.'</info>'
+                    'Generate Blueprint from '.($useBundles ? 'main' : '').' file <info>'.$mainBlueprint.'</info>'
                 );
             }
 
             $outputHtml = $projectDir.'/'.$input->getArgument('output');
-            $template = $input->getOption('template');
+            $format = $input->getOption('format');
 
-            $output->writeln($blueprintManager->generateDoc($mainBlueprint, $outputHtml, $useBundles, $resourceDir, $template, $output));
+            $output->writeln($blueprintManager->generateBlueprint($mainBlueprint, $outputHtml, $format, $useBundles, $resourceDir, $output));
 
-            $output->writeln('API Documentation generated to <info>'.$outputHtml.'<info>');
+            $output->writeln('Blueprint generated to <info>'.$outputHtml.'<info>');
         } catch (\Exception $e) {
-            $output->writeln('<error>API Documentation generation failed : </error>');
+            $output->writeln('<errorBlueprint generation failed : </error>');
             $output->writeln('<error>'.$e->getMessage().'</error>');
         }
     }
