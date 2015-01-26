@@ -75,7 +75,7 @@ EOF
 
             $outputMD = $projectDir.'/'.$input->getArgument('output');
 
-            $result = $blueprintManager->concatDocFiles($mainBlueprint, $resourceDir, $outputMD, $output);
+            $result = $blueprintManager->concatenateDoc($mainBlueprint, $outputMD, $resourceDir, $output);
 
             $output->writeln('Blueprint markdown Concatenated to <info>'.$result.'<info>');
         } catch (\Exception $e) {

@@ -32,3 +32,4 @@ coverage
 phpunit.xml
 cache.properties
 Tests/Fixtures/web/
+Tests/Tools/Fixtures/doc/blueprint.md

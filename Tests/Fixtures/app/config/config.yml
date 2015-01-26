@@ -12,3 +12,7 @@ framework:
 
 kilix_api_core:
     aglio_bin: "%kernel.root_dir%/../bin/aglio_fake aglio"
+    snowcrash_bin: "%kernel.root_dir%/../bin/snowcrash_fake snowcrash"
+    apiary2postman_bin: "%kernel.root_dir%/../bin/apiary2postman_fake apiary2postman"
+    replacements:
+        "==API_URL==" : "https://core.easi.local"

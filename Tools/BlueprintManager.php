@@ -88,12 +88,14 @@ class BlueprintManager
     {
         $fs = new Filesystem();
 
-        $inputBlueprint = $concat ? $this->concatDocFiles($mainBlueprint, $resourceDir, null, $output) : $mainBlueprint;
+        $inputBlueprint = $concat ? $this->concatFiles($mainBlueprint, $resourceDir, null, $output) : $mainBlueprint;
 
         $outputHtmlDir = dirname($outputHtml);
         if (!$fs->exists($outputHtmlDir)) {
             $fs->mkdir($outputHtmlDir);
         }
+
+        $inputBlueprint = $this->replacePatterns($inputBlueprint);
 
         if (!in_array($template, $this->getAvailableTemplates($output))) {
             $template = 'default';
@@ -122,7 +124,7 @@ class BlueprintManager
     {
         $fs = new Filesystem();
 
-        $inputBlueprint = $concat ? $this->concatDocFiles($mainBlueprint, $resourceDir, null, $output) : $mainBlueprint;
+        $inputBlueprint = $concat ? $this->concatFiles($mainBlueprint, $resourceDir, null, $output) : $mainBlueprint;
 
         $outputHtmlDir = dirname($outputHtml);
         if (!$fs->exists($outputHtmlDir)) {
@@ -137,6 +139,82 @@ class BlueprintManager
         }
 
         return $result->getOutput();
+    }
+
+    /**
+     * @param $mainBlueprint
+     * @param $target
+     * @param string $resourceDir
+     * @param OutputInterface $output
+     * @return string
+     */
+    public function concatenateDoc($mainBlueprint, $target, $resourceDir = 'doc/api', OutputInterface $output = null)
+    {
+        $fs = new Filesystem();
+
+        $targetDir = dirname($target);
+        if (!$fs->exists($targetDir)) {
+            $fs->mkdir($targetDir);
+        }
+
+        $target = $this->concatFiles($mainBlueprint, $resourceDir, $target, $output);
+
+        return $this->replacePatterns($target, true);
+    }
+
+    /**
+     * @param string $mainFile
+     * @param string $resourceDir
+     * @param null $target
+     * @param OutputInterface $output
+     * @return string
+     */
+    protected function concatFiles($mainFile, $resourceDir = 'doc/api', $target = null, OutputInterface $output = null)
+    {
+        $fs = new Filesystem();
+        $finder = new Finder();
+
+        $bundles = $this->kernel->getBundles();
+        $dirToScan = array();
+        foreach ($bundles as $bundle) {
+            $dir = $bundle->getPath().'/Resources/'.$resourceDir;
+            if ($fs->exists($dir)) {
+                $dirToScan[] = $dir;
+            }
+        }
+
+        if (empty($target)) {
+            $target = tempnam(sys_get_temp_dir(), 'api_');
+        }
+
+        $infos = pathinfo($target);
+        if (empty($infos['extension']) || $infos['extension'] != 'md') {
+            $target = $infos['dirname'].'/'.$infos['filename'].'.md';
+        }
+
+        $fs->touch($target);
+        if($fs->exists($mainFile)) {
+            file_put_contents($target, file_get_contents($mainFile));
+        }
+
+        if (!empty($dirToScan)) {
+            $finder
+                ->files()
+                ->name('*.md')
+                ->sortByName();
+
+            $finder->in($dirToScan);
+
+            foreach ($finder as $file) {
+                if ($output && $output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
+                    $relativePath = $fs->makePathRelative($file->getRealpath(), $this->projectDir);
+                    $output->writeln('concatenate <comment>'.$relativePath.'</comment>');
+                }
+                file_put_contents($target, "\n\n".$file->getContents(), FILE_APPEND);
+            }
+        }
+
+        return $target;
     }
 
     public function executeAglio($command, OutputInterface $output = null)
@@ -176,68 +254,11 @@ class BlueprintManager
     }
 
     /**
-     * @param string $mainFile
-     * @param string $resourceDir
-     * @param null $target
-     * @param OutputInterface $output
-     * @return string
-     */
-    public function concatDocFiles($mainFile, $resourceDir = 'doc/api', $target = null, OutputInterface $output = null)
-    {
-        $fs = new Filesystem();
-        $finder = new Finder();
-
-        $bundles = $this->kernel->getBundles();
-        $dirToScan = array();
-        foreach ($bundles as $bundle) {
-            $dir = $bundle->getPath().'/Resources/'.$resourceDir;
-            if ($fs->exists($dir)) {
-                $dirToScan[] = $dir;
-            }
-        }
-
-        if (empty($dirToScan)) {
-            return $mainFile;
-        }
-
-        $finder
-            ->files()
-            ->name('*.md')
-            ->sortByName();
-
-        $finder->in($dirToScan);
-
-        if (empty($target)) {
-            $target = tempnam(sys_get_temp_dir(), 'api_');
-        }
-
-        $infos = pathinfo($target);
-        if (empty($infos['extension']) || $infos['extension'] != 'md') {
-            $target = $infos['dirname'].'/'.$infos['filename'].'.md';
-        }
-
-        $fs->touch($target);
-        if($fs->exists($mainFile)) {
-            file_put_contents($target, file_get_contents($mainFile));
-        }
-
-        foreach ($finder as $file) {
-            if ($output && $output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
-                $relativePath  = $fs->makePathRelative($file->getRealpath(), $this->projectDir);
-                $output->writeln('concatenate <comment>' . $relativePath . '</comment>');
-            }
-            file_put_contents($target, "\n\n".$file->getContents(), FILE_APPEND);
-        }
-
-        return $target;
-    }
-
-    /**
      * @param $file
      * @param bool $inFile
      * @return string filename
      */
-    public function replacePatterns($file, $inFile = false)
+    protected function replacePatterns($file, $inFile = false)
     {
         if (empty($this->replacements)) {
             return $file;
@@ -248,14 +269,19 @@ class BlueprintManager
         $patterns = array();
         $replaces = array();
         foreach ($this->replacements as $pattern => $replace) {
-            $patterns[] = $pattern;
+            $patterns[] = '#'.$pattern.'#';
             $replaces[] = $replace;
         }
 
         $content = file_get_contents($file);
         $updatedContent = preg_replace($patterns, $replaces, $content);
 
-        $newFile = $inFile ? $file : tempnam(sys_get_temp_dir(), 'api_replaced_');
+        if ($inFile) {
+            $newFile = $file;
+        } else {
+            $extension = pathinfo($file, PATHINFO_EXTENSION);
+            $newFile = tempnam(sys_get_temp_dir(), 'api_replaced_').($extension ? '.'.$extension : '');
+        }
 
         $fs->dumpFile($newFile, $updatedContent);
 

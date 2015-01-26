@@ -1,0 +1,67 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__.'/../../../vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
+
+class Apiary2PostmanFakeCommand extends Command
+{
+    protected function configure()
+    {
+        $this
+            ->setName('apiary2postman')
+            ->setDescription('Fake apiary2postman executable')
+            ->addOption('input', 'i', InputOption::VALUE_REQUIRED, 'input blueprint markdown file', 'api_doc.md')
+            ->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'output HTML file', 'index.html')
+            ->addOption('template', 't', InputOption::VALUE_REQUIRED, 'template ', 'default')
+            ->addOption('list', 'l', InputOption::VALUE_NONE, 'list template')
+            ;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $inputFile = $input->getOption('input');
+        if (!in_array(pathinfo($inputFile, PATHINFO_EXTENSION), array('md', 'markdown'))) {
+            $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
+            $errOutput->writeln('Aglio Error');
+
+            return 1;
+        }
+
+        if ($input->getOption('list')) {
+                $output->writeln('Templates:
+cyborg-collapsible
+cyborg-multi
+cyborg
+default-collapsible
+default-multi
+default
+flatly-collapsible
+flatly-multi
+flatly
+slate-collapsible
+slate-multi
+slate');
+        } else {
+            $fs = new Filesystem();
+            $fs->remove($input->getOption('output'));
+            $fs->dumpFile($input->getOption('output'), 'api doc generated');
+        }
+    }
+}
+
+$application = new Application();
+$application->add(new Apiary2PostmanFakeCommand);
+$application->run();

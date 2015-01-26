@@ -28,7 +28,9 @@ class GenerateDocCommandTest extends WebTestCase
 
         $command = $application->find('api:generate:doc');
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array('command' => $command->getName()));
+        $commandTester->execute(array(
+            'command' => $command->getName(),
+        ), array('verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE));
 
         $this->assertRegExp('#API Documentation generated to '.$rootDir.'/web/doc/index.html#', $commandTester->getDisplay());
         $this->assertFileExists($rootDir.'/web/doc/index.html');
@@ -76,7 +78,7 @@ class GenerateDocCommandTest extends WebTestCase
         $this->assertRegExp('#API Documentation generation failed :\s*Main Input file '.$rootDir.'/foobar.md doesn\'t exists#', $commandTester->getDisplay());
     }
 
-    public function testExecuteWithBundlesScan()
+    public function testExecuteWithoutBundlesScan()
     {
         $rootDir = realpath(static::$kernel->getRootDir().'/../');
 
@@ -90,7 +92,7 @@ class GenerateDocCommandTest extends WebTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(array(
                 'command' => $command->getName(),
-                '--bundles' => true,
+                '--no-scan' => true,
             ), array(
                 'verbosity' => OutputInterface::VERBOSITY_DEBUG,
             ));
@@ -113,7 +115,6 @@ class GenerateDocCommandTest extends WebTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(array(
                 'command' => $command->getName(),
-                '--bundles' => true,
                 '--resources-dir' => 'doc/blueprint',
             ));
 
@@ -136,6 +137,7 @@ class GenerateDocCommandTest extends WebTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(array(
                 'command' => $command->getName(),
+                '--no-scan' => true,
                 'input' => 'doc/foobar.txt',
             ));
 
