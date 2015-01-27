@@ -95,7 +95,7 @@ EOF
             $outputHtml = $projectDir.'/'.$input->getArgument('output');
             $format = $input->getOption('format');
 
-            $output->writeln($blueprintManager->generateBlueprint($mainBlueprint, $outputHtml, $format, $useBundles, $resourceDir, $output));
+            $output->writeln($blueprintManager->generateBlueprint($mainBlueprint, $outputHtml, $format, $useBundles, true, $resourceDir, $output));
 
             $output->writeln('Blueprint generated to <info>'.$outputHtml.'<info>');
         } catch (\Exception $e) {

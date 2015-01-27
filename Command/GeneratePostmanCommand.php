@@ -29,6 +29,12 @@ class GeneratePostmanCommand extends ContainerAwareCommand
             ->addArgument('input', InputArgument::OPTIONAL, 'main or first blueprint markdown file', 'doc/api_doc.md')
             ->addArgument('output', InputArgument::OPTIONAL, 'output JSON Postman Collection configuration', 'doc/postman.collection')
             ->addOption(
+                'replace',
+                'r',
+                InputOption::VALUE_NONE,
+                'replace patterns'
+            )
+            ->addOption(
                 'pretty',
                 'p',
                 InputOption::VALUE_NONE,
@@ -79,6 +85,7 @@ EOF
             }
 
             $useBundles = !$input->getOption('no-scan');
+            $useReplace = $input->getOption('replace');
             $resourceDir = $input->getOption('resources-dir');
             $pretty = $input->getOption('pretty');
 
@@ -90,7 +97,7 @@ EOF
 
             $outputPostman = $projectDir.'/'.$input->getArgument('output');
 
-            $output->writeln($blueprintManager->generatePostman($mainBlueprint, $outputPostman, $pretty, $useBundles, $resourceDir, $output));
+            $output->writeln($blueprintManager->generatePostman($mainBlueprint, $outputPostman, $pretty, $useBundles, $useReplace, $resourceDir, $output));
 
             $output->writeln('API Postman collection generated to <info>'.$outputPostman.'<info>');
         } catch (\Exception $e) {

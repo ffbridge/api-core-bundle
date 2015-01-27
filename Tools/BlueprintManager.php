@@ -111,10 +111,10 @@ class BlueprintManager
         return $result->getOutput();
     }
 
-    public function generatePostman($mainBlueprint, $outputPostman, $pretty = true, $concat = false, $resourceDir = 'doc/api', OutputInterface $output = null)
+    public function generatePostman($mainBlueprint, $outputPostman, $pretty = true, $concat = false, $replace = true, $resourceDir = 'doc/api', OutputInterface $output = null)
     {
         $blueprintJson = $target = tempnam(sys_get_temp_dir(), 'api_blueprint_').'.json';
-        $this->generateBlueprint($mainBlueprint, $blueprintJson, 'json', $concat, $resourceDir, $output);
+        $this->generateBlueprint($mainBlueprint, $blueprintJson, 'json', $concat, $replace, $resourceDir, $output);
 
         $fs = new Filesystem();
 
@@ -134,11 +134,12 @@ class BlueprintManager
      * @param $outputHtml
      * @param string $format
      * @param bool $concat
+     * @param bool $replace
      * @param string $resourceDir
      * @param OutputInterface $output
      * @return string
      */
-    public function generateBlueprint($mainBlueprint, $outputHtml, $format = 'json', $concat = false, $resourceDir = 'doc/api', OutputInterface $output = null)
+    public function generateBlueprint($mainBlueprint, $outputHtml, $format = 'json', $concat = false, $replace = true, $resourceDir = 'doc/api', OutputInterface $output = null)
     {
         $fs = new Filesystem();
 
@@ -149,7 +150,9 @@ class BlueprintManager
             $fs->mkdir($outputHtmlDir);
         }
 
-        $inputBlueprint = $this->replacePatterns($inputBlueprint);
+        if ($replace) {
+            $inputBlueprint = $this->replacePatterns($inputBlueprint);
+        }
 
         $result = $this->executeSnowcrash(' -o '.$outputHtml.' --format '.$format.' '.$inputBlueprint, $output);
         if ($concat && $mainBlueprint != $inputBlueprint) {
