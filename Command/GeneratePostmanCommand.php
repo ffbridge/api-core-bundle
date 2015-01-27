@@ -12,22 +12,28 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Class GenerateDocCommand
+ * Class GeneratePostmanCommand
  * @package Kilix\Bundle\ApiCoreBundle\Command
  */
-class GenerateDocCommand extends ContainerAwareCommand
+class GeneratePostmanCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('api:generate:doc')
+        $this->setName('api:generate:postman')
             ->setAliases(
                 array(
-                    'generate:api:doc',
+                    'generate:api:postman',
                 )
             )
-            ->setDescription('generate HTML API documentation from API blueprint markdown with Aglio')
+            ->setDescription('generate API Postman configuration from API blueprint markdown with apiary2postman')
             ->addArgument('input', InputArgument::OPTIONAL, 'main or first blueprint markdown file', 'doc/api_doc.md')
-            ->addArgument('output', InputArgument::OPTIONAL, 'output HTML file', 'web/doc/index.html')
+            ->addArgument('output', InputArgument::OPTIONAL, 'output JSON Postman Collection configuration', 'doc/postman.collection')
+            ->addOption(
+                'pretty',
+                'p',
+                InputOption::VALUE_NONE,
+                'dump Postman JSON config as pretty JSON'
+            )
             ->addOption(
                 'no-scan',
                 'c',
@@ -41,24 +47,11 @@ class GenerateDocCommand extends ContainerAwareCommand
                 'directory in bundle ressource to concatenate',
                 'doc/api'
             )
-            ->addOption('template', 't', InputOption::VALUE_REQUIRED, 'template ', 'default')
             ->setHelp(
                 <<<EOF
-                The <info>%command.name%</info> command generate API Documentation.
+                The <info>%command.name%</info> command generate API Postman configuration.
 
-<info>php %command.full_name% doc/api_doc.md web/doc/index.html</info>
-
-generate documentation with default template to <comment>web/doc/index.html</comment>
-
-<info>php %command.full_name% --template=slate doc/api_doc.md web/doc/index.html</info>
-
-generate documentation with slate template
-
-<info>php %command.full_name% doc/api_head_doc.md web/doc/index.html</info>
-
-generate documentation by file concatenation from bundles Resources/<comment>doc/api</comment> directories, <info>doc/api_head_doc.md</info> is used as blueprint header
-
-<info>php %command.full_name% --resources-dir=doc/blueprint doc/api_head_doc.md web/doc/index.html</info>
+<info>php %command.full_name% doc/api_doc.md doc/postman.collection</info>
 
 EOF
             );
@@ -87,21 +80,21 @@ EOF
 
             $useBundles = !$input->getOption('no-scan');
             $resourceDir = $input->getOption('resources-dir');
+            $pretty = $input->getOption('pretty');
 
             if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
                 $output->writeln(
-                    'Generate API documentation from '.($useBundles ? 'main' : '').' file <info>'.$mainBlueprint.'</info>'
+                    'Generate API Postman collection from '.($useBundles ? 'main' : '').' file <info>'.$mainBlueprint.'</info>'
                 );
             }
 
-            $outputHtml = $projectDir.'/'.$input->getArgument('output');
-            $template = $input->getOption('template');
+            $outputPostman = $projectDir.'/'.$input->getArgument('output');
 
-            $output->writeln($blueprintManager->generateDoc($mainBlueprint, $outputHtml, $useBundles, $resourceDir, $template, $output));
+            $output->writeln($blueprintManager->generatePostman($mainBlueprint, $outputPostman, $pretty, $useBundles, $resourceDir, $output));
 
-            $output->writeln('API Documentation generated to <info>'.$outputHtml.'<info>');
+            $output->writeln('API Postman collection generated to <info>'.$outputPostman.'<info>');
         } catch (\Exception $e) {
-            $output->writeln('<error>API Documentation generation failed : </error>');
+            $output->writeln('<error>API Postman collection generation failed : </error>');
             $output->writeln('<error>'.$e->getMessage().'</error>');
         }
     }

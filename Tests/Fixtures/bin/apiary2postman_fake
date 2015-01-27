@@ -1,0 +1,44 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__.'/../../../vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
+
+class Apiary2PostmanFakeCommand extends Command
+{
+    protected function configure()
+    {
+        $this
+            ->setName('apiary2postman')
+            ->setDescription('Fake apiary2postman executable')
+            ->addArgument('input_format', InputArgument::REQUIRED, 'input format')
+            ->addArgument('input', InputArgument::REQUIRED, 'input blueprint file')
+            ->addOption('output', null, InputOption::VALUE_REQUIRED, 'output Postman collection file', 'postman.collection')
+            ->addOption('pretty', null, InputOption::VALUE_NONE, 'pretty JSON')
+            ->addOption('only-collection', null, InputOption::VALUE_NONE, 'only Postman collection')
+            ;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $fs = new Filesystem();
+        $fs->remove($input->getOption('output'));
+        $fs->dumpFile($input->getOption('output'), 'Postman collection generated');
+    }
+}
+
+$application = new Application();
+$application->add(new Apiary2PostmanFakeCommand);
+$application->run();

@@ -22,7 +22,15 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('replacements')
+                    ->fixXmlConfig('replacement', 'replacements')
+                    ->defaultValue(array())
+                    ->prototype('scalar')
+                    ->end()
+                ->end()
                 ->scalarNode('aglio_bin')->defaultValue('/usr/bin/aglio')->end()
+                ->scalarNode('snowcrash_bin')->defaultValue('/usr/local/bin/snowcrash')->end()
+                ->scalarNode('apiary2postman_bin')->defaultValue('/usr/local/bin/apiary2postman')->end()
             ->end();
 
         return $treeBuilder;
