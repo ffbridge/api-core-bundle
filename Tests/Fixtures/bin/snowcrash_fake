@@ -31,8 +31,6 @@ class SnowcrashFakeCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-//        $inputFile = $input->getOption('input');
-
         $fs = new Filesystem();
         $fs->remove($input->getOption('output'));
         $fs->dumpFile($input->getOption('output'), 'blueprint AST generated');

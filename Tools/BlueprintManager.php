@@ -111,6 +111,24 @@ class BlueprintManager
         return $result->getOutput();
     }
 
+    public function generatePostman($mainBlueprint, $outputPostman, $pretty = true, $concat = false, $resourceDir = 'doc/api', OutputInterface $output = null)
+    {
+        $blueprintJson = $target = tempnam(sys_get_temp_dir(), 'api_blueprint_').'.json';
+        $this->generateBlueprint($mainBlueprint, $blueprintJson, 'json', $concat, $resourceDir, $output);
+
+        $fs = new Filesystem();
+
+        $outputDir = dirname($outputPostman);
+        if (!$fs->exists($outputDir)) {
+            $fs->mkdir($outputDir);
+        }
+
+        $result = $this->executeApiary2Postman(($pretty ? '--pretty ': '').'--only-collection --output '.$outputPostman.' json '.$blueprintJson, $output);
+        $fs->remove($blueprintJson);
+
+        return $result->getOutput();
+    }
+
     /**
      * @param $mainBlueprint
      * @param $outputHtml

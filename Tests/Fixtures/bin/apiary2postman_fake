@@ -19,10 +19,11 @@ class Apiary2PostmanFakeCommand extends Command
         $this
             ->setName('apiary2postman')
             ->setDescription('Fake apiary2postman executable')
-            ->addOption('input', 'i', InputOption::VALUE_REQUIRED, 'input blueprint markdown file', 'api_doc.md')
-            ->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'output HTML file', 'index.html')
-            ->addOption('template', 't', InputOption::VALUE_REQUIRED, 'template ', 'default')
-            ->addOption('list', 'l', InputOption::VALUE_NONE, 'list template')
+            ->addArgument('input_format', InputArgument::REQUIRED, 'input format')
+            ->addArgument('input', InputArgument::REQUIRED, 'input blueprint file')
+            ->addOption('output', null, InputOption::VALUE_REQUIRED, 'output Postman collection file', 'postman.collection')
+            ->addOption('pretty', null, InputOption::VALUE_NONE, 'pretty JSON')
+            ->addOption('only-collection', null, InputOption::VALUE_NONE, 'only Postman collection')
             ;
     }
 
@@ -32,33 +33,9 @@ class Apiary2PostmanFakeCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $inputFile = $input->getOption('input');
-        if (!in_array(pathinfo($inputFile, PATHINFO_EXTENSION), array('md', 'markdown'))) {
-            $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
-            $errOutput->writeln('Aglio Error');
-
-            return 1;
-        }
-
-        if ($input->getOption('list')) {
-                $output->writeln('Templates:
-cyborg-collapsible
-cyborg-multi
-cyborg
-default-collapsible
-default-multi
-default
-flatly-collapsible
-flatly-multi
-flatly
-slate-collapsible
-slate-multi
-slate');
-        } else {
-            $fs = new Filesystem();
-            $fs->remove($input->getOption('output'));
-            $fs->dumpFile($input->getOption('output'), 'api doc generated');
-        }
+        $fs = new Filesystem();
+        $fs->remove($input->getOption('output'));
+        $fs->dumpFile($input->getOption('output'), 'Postman collection generated');
     }
 }
 
