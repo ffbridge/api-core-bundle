@@ -10,6 +10,8 @@ services:
             - %kilix_api_core.aglio_bin%
             - %kilix_api_core.snowcrash_bin%
             - %kilix_api_core.apiary2postman_bin%
+            - %kilix_api_core.blueman_bin%
+            - %kilix_api_core.default_postman_converter%
 
     kilix_api_core.api_paramaters_listener:
         class: %kilix_api_core.api_paramaters_listener.class%

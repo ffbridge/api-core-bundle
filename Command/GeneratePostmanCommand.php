@@ -8,8 +8,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Class GeneratePostmanCommand
@@ -25,14 +23,21 @@ class GeneratePostmanCommand extends ContainerAwareCommand
                     'generate:api:postman',
                 )
             )
-            ->setDescription('generate API Postman configuration from API blueprint markdown with apiary2postman')
+            ->setDescription('generate API Postman configuration from API blueprint markdown with apiary2postman or blueman')
             ->addArgument('input', InputArgument::OPTIONAL, 'main or first blueprint markdown file', 'doc/api_doc.md')
-            ->addArgument('output', InputArgument::OPTIONAL, 'output JSON Postman Collection configuration', 'doc/postman.collection')
+            ->addArgument('output', InputArgument::OPTIONAL, 'output JSON Postman Collection configuration', 'doc/postman_collection.json')
             ->addOption(
                 'replace',
                 'r',
                 InputOption::VALUE_NONE,
                 'replace patterns'
+            )
+            ->addOption(
+                'converter',
+                'b',
+                InputOption::VALUE_REQUIRED,
+                'converter to use blueman or apiary2postman',
+                'blueman'
             )
             ->addOption(
                 'pretty',
@@ -77,7 +82,7 @@ EOF
             $projectDir = realpath($this->getContainer()->get('kernel')->getRootDir().'/..');
 
             $mainBlueprint = $input->getArgument('input');
-            if(!$fs->exists($mainBlueprint)) {
+            if (!$fs->exists($mainBlueprint)) {
                 $mainBlueprint = $projectDir.'/'.$mainBlueprint;
                 if (!$fs->exists($mainBlueprint)) {
                     throw new \InvalidArgumentException('Main Input file '.$mainBlueprint.' doesn\'t exists');
@@ -86,6 +91,7 @@ EOF
 
             $useBundles = !$input->getOption('no-scan');
             $useReplace = $input->getOption('replace');
+            $converter = $input->getOption('converter');
             $resourceDir = $input->getOption('resources-dir');
             $pretty = $input->getOption('pretty');
 
@@ -97,7 +103,7 @@ EOF
 
             $outputPostman = $projectDir.'/'.$input->getArgument('output');
 
-            $output->writeln($blueprintManager->generatePostman($mainBlueprint, $outputPostman, $pretty, $useBundles, $useReplace, $resourceDir, $output));
+            $blueprintManager->generatePostman($mainBlueprint, $outputPostman, $pretty, $useBundles, $useReplace, $converter, $resourceDir, $output);
 
             $output->writeln('API Postman collection generated to <info>'.$outputPostman.'<info>');
         } catch (\Exception $e) {

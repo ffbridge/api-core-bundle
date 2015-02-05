@@ -22,6 +22,10 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->enumNode('default_postman_converter')
+                    ->values(array('apiary2postman', 'blueman'))
+                    ->defaultValue('blueman')
+                ->end()
                 ->arrayNode('replacements')
                     ->fixXmlConfig('replacement', 'replacements')
                     ->defaultValue(array())
@@ -31,6 +35,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('aglio_bin')->defaultValue('/usr/bin/aglio')->end()
                 ->scalarNode('snowcrash_bin')->defaultValue('/usr/local/bin/snowcrash')->end()
                 ->scalarNode('apiary2postman_bin')->defaultValue('/usr/local/bin/apiary2postman')->end()
+                ->scalarNode('blueman_bin')->defaultValue('/usr/local/bin/blueman')->end()
             ->end();
 
         return $treeBuilder;

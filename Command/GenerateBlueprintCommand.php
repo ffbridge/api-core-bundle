@@ -8,8 +8,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Class GenerateBlueprintCommand
@@ -28,6 +26,12 @@ class GenerateBlueprintCommand extends ContainerAwareCommand
             ->setDescription('generate Blueprint Abstract Syntax Tree from API blueprint markdown with snowcrash')
             ->addArgument('input', InputArgument::OPTIONAL, 'main or first blueprint markdown file', 'doc/api_doc.md')
             ->addArgument('output', InputArgument::OPTIONAL, 'output Blueprint file', 'doc/blueprint.json')
+            ->addOption(
+                'replace',
+                'r',
+                InputOption::VALUE_NONE,
+                'replace patterns'
+            )
             ->addOption(
                 'format',
                 'f',
@@ -76,7 +80,7 @@ EOF
             $projectDir = realpath($this->getContainer()->get('kernel')->getRootDir().'/..');
 
             $mainBlueprint = $input->getArgument('input');
-            if(!$fs->exists($mainBlueprint)) {
+            if (!$fs->exists($mainBlueprint)) {
                 $mainBlueprint = $projectDir.'/'.$mainBlueprint;
                 if (!$fs->exists($mainBlueprint)) {
                     throw new \InvalidArgumentException('Main Input file '.$mainBlueprint.' doesn\'t exists');
@@ -84,6 +88,7 @@ EOF
             }
 
             $useBundles = !$input->getOption('no-scan');
+            $useReplace = $input->getOption('replace');
             $resourceDir = $input->getOption('resources-dir');
 
             if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
@@ -95,7 +100,7 @@ EOF
             $outputHtml = $projectDir.'/'.$input->getArgument('output');
             $format = $input->getOption('format');
 
-            $output->writeln($blueprintManager->generateBlueprint($mainBlueprint, $outputHtml, $format, $useBundles, true, $resourceDir, $output));
+            $output->writeln($blueprintManager->generateBlueprint($mainBlueprint, $outputHtml, $format, $useBundles, $useReplace, $resourceDir, $output));
 
             $output->writeln('Blueprint generated to <info>'.$outputHtml.'<info>');
         } catch (\Exception $e) {

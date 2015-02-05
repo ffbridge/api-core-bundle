@@ -70,8 +70,8 @@ class ApiParameterBag extends ParameterBag
                     array_intersect_key($request->$type->all(), array_flip($filteredKeys));
 
                 if ($type == static::PARAMETERS_TYPE_HEADERS) {
-                    $params = array_map(function($v) {
-                        return is_array($v) ? implode(';', $v): $v;
+                    $params = array_map(function ($v) {
+                        return is_array($v) ? implode(';', $v) : $v;
                     }, $params);
                 }
 

@@ -16,7 +16,7 @@ class ApiErrorController extends Controller
     public function validationErrorsAction(Request $request)
     {
         $format = $request->get('_format', 'json');
-        $apiErrors =$request->attributes->get('_api_errors', array());
+        $apiErrors = $request->attributes->get('_api_errors', array());
 
         switch ($format) {
             case 'xml':
@@ -33,7 +33,7 @@ class ApiErrorController extends Controller
             default:
                 $response = new JsonResponse(
                     array(
-                        'errors' => $apiErrors
+                        'errors' => $apiErrors,
                     ),
                     400
                 );

@@ -28,6 +28,8 @@ class KilixApiCoreExtension extends Extension
         $container->setParameter('kilix_api_core.aglio_bin', $config['aglio_bin']);
         $container->setParameter('kilix_api_core.snowcrash_bin', $config['snowcrash_bin']);
         $container->setParameter('kilix_api_core.apiary2postman_bin', $config['apiary2postman_bin']);
+        $container->setParameter('kilix_api_core.blueman_bin', $config['blueman_bin']);
+        $container->setParameter('kilix_api_core.default_postman_converter', $config['default_postman_converter']);
 
         $definition = $container->getDefinition('kilix_api_core.blueprint_manager');
         $definition->addArgument($config['replacements']);

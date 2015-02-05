@@ -26,7 +26,7 @@ class BlueprintManagerTest extends WebTestCase
             array()
         );
 
-        $target = $manager->concatenateDoc(__DIR__.'/Fixtures/doc/api_doc.md', __DIR__.'/Fixtures/doc/blueprint.md', 'dpc/api');
+        $target = $manager->concatenateDoc(__DIR__.'/Fixtures/doc/api_doc.md', __DIR__.'/Fixtures/doc/blueprint.md', 'doc/api');
 
         $this->assertEquals(__DIR__.'/Fixtures/doc/blueprint.md', $target);
         $this->assertFileExists($target);

@@ -30,6 +30,7 @@ class GenerateBlueprintCommandTest extends WebTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(array(
             'command' => $command->getName(),
+            '--replace' => true,
         ), array('verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE));
 
         $this->assertRegExp('#Blueprint generated to '.$rootDir.'/doc/blueprint.json#', $commandTester->getDisplay());
@@ -42,7 +43,7 @@ class GenerateBlueprintCommandTest extends WebTestCase
 
         $fs = new Filesystem();
         $fs->remove(array(
-            $rootDir.'/doc/build'
+            $rootDir.'/doc/build',
         ));
 
         $application = new Application(static::$kernel);
@@ -59,7 +60,7 @@ class GenerateBlueprintCommandTest extends WebTestCase
         $this->assertFileExists($rootDir.'/doc/build/blueprint.json');
 
         $fs->remove(array(
-            $rootDir.'/doc/build'
+            $rootDir.'/doc/build',
         ));
     }
 
@@ -77,7 +78,7 @@ class GenerateBlueprintCommandTest extends WebTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(array(
             'command' => $command->getName(),
-            'input' => 'doc/foobar.md'
+            'input' => 'doc/foobar.md',
         ), array('verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE));
 
         $this->assertRegExp('#Blueprint generation failed :\s*Main Input file '.$rootDir.'/doc/foobar.md doesn\'t exists#', $commandTester->getDisplay());

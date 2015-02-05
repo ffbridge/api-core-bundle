@@ -2,9 +2,6 @@
 
 namespace Kilix\Bundle\ApiCoreBundle\Tools;
 
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -13,6 +10,16 @@ use Symfony\Component\Finder\Finder;
 
 class BlueprintManager
 {
+    /**
+     * Possible Blueprint to postman converters
+     *
+     * @var array
+     */
+    protected static $postmanConverters = array(
+        'blueman',
+        'apiary2postman',
+    );
+
     /**
      * aglio bin path
      *
@@ -35,6 +42,20 @@ class BlueprintManager
     protected $apiary2postmanBin;
 
     /**
+     * blueman Bin bin path
+     *
+     * @var string
+     */
+    protected $bluemanBin;
+
+    /**
+     * Postman Converter to use by default
+     *
+     * @var string
+     */
+    protected $defaultPostmanConverter;
+
+    /**
      * @var array
      */
     protected $replacements;
@@ -54,20 +75,25 @@ class BlueprintManager
      * @param $aglioBin
      * @param $snowcrashBin
      * @param $apiary2postmanBin
+     * @param $bluemanBin
+     * @param string $defaultPostmanConverter
+     * @param array  $replacements
      * @param string $relativeProjectDir
      */
-    public function __construct($kernel, $aglioBin, $snowcrashBin, $apiary2postmanBin, $replacements = array(), $relativeProjectDir = '/..')
+    public function __construct($kernel, $aglioBin, $snowcrashBin, $apiary2postmanBin, $bluemanBin, $defaultPostmanConverter = 'blueman', $replacements = array(), $relativeProjectDir = '/..')
     {
         $this->aglioBin = $aglioBin;
         $this->snowcrashBin = $snowcrashBin;
         $this->apiary2postmanBin = $apiary2postmanBin;
+        $this->bluemanBin = $bluemanBin;
+        $this->defaultPostmanConverter = in_array($defaultPostmanConverter, static::$postmanConverters) ? $defaultPostmanConverter : 'blueman';
         $this->kernel = $kernel;
         $this->projectDir = realpath($this->kernel->getRootDir().$relativeProjectDir);
         $this->replacements = $replacements;
     }
 
     /**
-     * @param OutputInterface $output
+     * @param  OutputInterface $output
      * @return array
      */
     public function getAvailableTemplates(OutputInterface $output = null)
@@ -78,10 +104,10 @@ class BlueprintManager
     /**
      * @param $mainBlueprint
      * @param $outputHtml
-     * @param bool $concat
-     * @param string $resourceDir
-     * @param null $template
-     * @param OutputInterface $output
+     * @param  bool            $concat
+     * @param  string          $resourceDir
+     * @param  null            $template
+     * @param  OutputInterface $output
      * @return string
      */
     public function generateDoc($mainBlueprint, $outputHtml, $concat = false, $resourceDir = 'doc/api', $template = null, OutputInterface $output = null)
@@ -111,8 +137,10 @@ class BlueprintManager
         return $result->getOutput();
     }
 
-    public function generatePostman($mainBlueprint, $outputPostman, $pretty = true, $concat = false, $replace = true, $resourceDir = 'doc/api', OutputInterface $output = null)
+    public function generatePostman($mainBlueprint, $outputPostman, $pretty = true, $concat = false, $replace = true, $converterToUse = 'blueman', $resourceDir = 'doc/api', OutputInterface $output = null)
     {
+        $converterToUse = in_array($converterToUse, static::$postmanConverters) ? $converterToUse : $this->defaultPostmanConverter;
+
         $blueprintJson = $target = tempnam(sys_get_temp_dir(), 'api_blueprint_').'.json';
         $this->generateBlueprint($mainBlueprint, $blueprintJson, 'json', $concat, $replace, $resourceDir, $output);
 
@@ -123,7 +151,20 @@ class BlueprintManager
             $fs->mkdir($outputDir);
         }
 
-        $result = $this->executeApiary2Postman(($pretty ? '--pretty ': '').'--only-collection --output '.$outputPostman.' json '.$blueprintJson, $output);
+        if ($converterToUse == 'apiary2postman') {
+            $result = $this->executeApiary2Postman(
+                ($pretty ? '--pretty ' : '').'--only-collection --output '.$outputPostman.' json '.$blueprintJson,
+                $output
+            );
+        } else {
+            $dirname = dirname($blueprintJson);
+            $filename = basename($blueprintJson);
+
+            $result = $this->executeBlueman(
+                'convert --output='.$outputPostman.' --path='.$dirname.' '.$filename,
+                $output
+            );
+        }
         $fs->remove($blueprintJson);
 
         return $result->getOutput();
@@ -132,11 +173,11 @@ class BlueprintManager
     /**
      * @param $mainBlueprint
      * @param $outputHtml
-     * @param string $format
-     * @param bool $concat
-     * @param bool $replace
-     * @param string $resourceDir
-     * @param OutputInterface $output
+     * @param  string          $format
+     * @param  bool            $concat
+     * @param  bool            $replace
+     * @param  string          $resourceDir
+     * @param  OutputInterface $output
      * @return string
      */
     public function generateBlueprint($mainBlueprint, $outputHtml, $format = 'json', $concat = false, $replace = true, $resourceDir = 'doc/api', OutputInterface $output = null)
@@ -165,8 +206,8 @@ class BlueprintManager
     /**
      * @param $mainBlueprint
      * @param $target
-     * @param string $resourceDir
-     * @param OutputInterface $output
+     * @param  string          $resourceDir
+     * @param  OutputInterface $output
      * @return string
      */
     public function concatenateDoc($mainBlueprint, $target, $resourceDir = 'doc/api', OutputInterface $output = null)
@@ -184,10 +225,10 @@ class BlueprintManager
     }
 
     /**
-     * @param string $mainFile
-     * @param string $resourceDir
-     * @param null $target
-     * @param OutputInterface $output
+     * @param  string          $mainFile
+     * @param  string          $resourceDir
+     * @param  null            $target
+     * @param  OutputInterface $output
      * @return string
      */
     protected function concatFiles($mainFile, $resourceDir = 'doc/api', $target = null, OutputInterface $output = null)
@@ -214,7 +255,7 @@ class BlueprintManager
         }
 
         $fs->touch($target);
-        if($fs->exists($mainFile)) {
+        if ($fs->exists($mainFile)) {
             file_put_contents($target, file_get_contents($mainFile));
         }
 
@@ -253,9 +294,14 @@ class BlueprintManager
         return $this->execute($this->apiary2postmanBin, $command, $output);
     }
 
+    public function executeBlueman($command, OutputInterface $output = null)
+    {
+        return $this->execute($this->bluemanBin, $command, $output);
+    }
+
     /**
-     * @param string $command
-     * @param OutputInterface $output
+     * @param  string          $command
+     * @param  OutputInterface $output
      * @return Process
      */
     protected function execute($bin, $command, OutputInterface $output = null)
@@ -276,7 +322,7 @@ class BlueprintManager
 
     /**
      * @param $file
-     * @param bool $inFile
+     * @param  bool   $inFile
      * @return string filename
      */
     protected function replacePatterns($file, $inFile = false)

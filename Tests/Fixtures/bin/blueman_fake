@@ -1,0 +1,44 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__.'/../../../vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
+
+class BluemanFakeCommand extends Command
+{
+    protected function configure()
+    {
+        $this
+            ->setName('blueman')
+            ->setDescription('Fake blueman executable')
+            ->addArgument('blueman_command', InputArgument::REQUIRED, 'command')
+            ->addArgument('input-file', InputArgument::REQUIRED, 'input JSON blueprint file')
+            ->addOption('output', null, InputOption::VALUE_REQUIRED, 'The location (including the filename) of where your collection should be saved.', 'postman_collection.json')
+            ->addOption('path', null, InputOption::VALUE_REQUIRED, 'The absolute path pointing to the location of your JSON file.')
+            ->addOption('host', null, InputOption::VALUE_REQUIRED, 'The base host of your API (e.g. https://api.example.com/v1).')
+            ;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $fs = new Filesystem();
+        $fs->remove($input->getOption('output'));
+        $fs->dumpFile($input->getOption('output'), 'Postman collection generated');
+    }
+}
+
+$application = new Application();
+$application->add(new BluemanFakeCommand);
+$application->run();

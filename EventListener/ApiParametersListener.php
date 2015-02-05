@@ -9,7 +9,6 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Kilix\Bundle\ApiCoreBundle\Annotations\ApiParameters;
 use Symfony\Component\Validator\ValidatorInterface;
 
-
 class ApiParametersListener
 {
     /**
@@ -69,7 +68,7 @@ class ApiParametersListener
                 if (count($errors) > 0) {
                     $errorsList = array();
                     foreach ($errors as $error) {
-                        $key = preg_replace('/parameters\[(.+)\]/', '$1',$error->getPropertyPath());
+                        $key = preg_replace('/parameters\[(.+)\]/', '$1', $error->getPropertyPath());
 
                         $errorsList[$key] = $error->getMessage();
                     }

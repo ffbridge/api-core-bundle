@@ -17,7 +17,7 @@ class ExampleApiControllerTest extends WebTestCase
             'max' => '20',
             'sort' => 'name',
             'created_at' => '2014-01-01',
-        ), json_decode($response->getContent(),true));
+        ), json_decode($response->getContent(), true));
     }
 
     public function testRoutingApiParametersWithValidation()
@@ -35,7 +35,7 @@ class ExampleApiControllerTest extends WebTestCase
                 'sort' => 'The value you selected is not a valid choice.',
                 'created_at' => 'This value is not a valid date.',
             ),
-        ), json_decode($response->getContent(),true));
+        ), json_decode($response->getContent(), true));
     }
 
     public function testAnnotationsApiParameters()
@@ -49,7 +49,7 @@ class ExampleApiControllerTest extends WebTestCase
                 'max' => '20',
                 'sort' => 'name',
                 'created_at' => '2014-01-01',
-            ), json_decode($response->getContent(),true));
+            ), json_decode($response->getContent(), true));
     }
 
     public function testAnnotationsApiParametersWithValidation()
@@ -67,7 +67,7 @@ class ExampleApiControllerTest extends WebTestCase
                 'sort' => 'The value you selected is not a valid choice.',
                 'created_at' => 'This value is not a valid date.',
             ),
-        ), json_decode($response->getContent(),true));
+        ), json_decode($response->getContent(), true));
     }
 
     public function testAnnotationsApiParametersWithValidationXml()

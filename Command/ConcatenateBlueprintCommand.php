@@ -8,8 +8,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Class ConcatenateBlueprintCommand
@@ -58,7 +56,7 @@ EOF
             $projectDir = realpath($this->getContainer()->get('kernel')->getRootDir().'/..');
 
             $mainBlueprint = $input->getArgument('input');
-            if(!$fs->exists($mainBlueprint)) {
+            if (!$fs->exists($mainBlueprint)) {
                 $mainBlueprint = $projectDir.'/'.$mainBlueprint;
                 if (!$fs->exists($mainBlueprint)) {
                     throw new \InvalidArgumentException('Main Input file '.$mainBlueprint.' doesn\'t exists');

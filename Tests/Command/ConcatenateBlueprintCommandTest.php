@@ -79,7 +79,7 @@ class ConcatenateBlueprintCommandTest extends WebTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(array(
             'command' => $command->getName(),
-            'input' => 'doc/foobar.md'
+            'input' => 'doc/foobar.md',
         ), array('verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE));
 
         $this->assertRegExp('#Blueprint markdown Concatening failed :\s*Main Input file '.$rootDir.'/doc/foobar.md doesn\'t exists#', $commandTester->getDisplay());
