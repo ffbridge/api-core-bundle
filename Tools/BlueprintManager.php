@@ -206,11 +206,12 @@ class BlueprintManager
     /**
      * @param $mainBlueprint
      * @param $target
-     * @param  string          $resourceDir
-     * @param  OutputInterface $output
+     * @param string $resourceDir
+     * @param bool $replace
+     * @param OutputInterface $output
      * @return string
      */
-    public function concatenateDoc($mainBlueprint, $target, $resourceDir = 'doc/api', OutputInterface $output = null)
+    public function concatenateDoc($mainBlueprint, $target, $resourceDir = 'doc/api', $replace = true, OutputInterface $output = null)
     {
         $fs = new Filesystem();
 
@@ -221,7 +222,11 @@ class BlueprintManager
 
         $target = $this->concatFiles($mainBlueprint, $resourceDir, $target, $output);
 
-        return $this->replacePatterns($target, true);
+        if ($replace) {
+            $target = $this->replacePatterns($target, true);
+        }
+
+        return $target;
     }
 
     /**

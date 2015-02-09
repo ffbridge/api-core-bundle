@@ -25,7 +25,7 @@ class GeneratePostmanCommand extends ContainerAwareCommand
             )
             ->setDescription('generate API Postman configuration from API blueprint markdown with apiary2postman or blueman')
             ->addArgument('input', InputArgument::OPTIONAL, 'main or first blueprint markdown file', 'doc/api_doc.md')
-            ->addArgument('output', InputArgument::OPTIONAL, 'output JSON Postman Collection configuration', 'doc/postman_collection.json')
+            ->addArgument('output', InputArgument::OPTIONAL, 'output JSON Postman Collection configuration', 'doc/postman.json')
             ->addOption(
                 'replace',
                 'r',
@@ -62,7 +62,7 @@ class GeneratePostmanCommand extends ContainerAwareCommand
                 <<<EOF
                 The <info>%command.name%</info> command generate API Postman configuration.
 
-<info>php %command.full_name% doc/api_doc.md doc/postman.collection</info>
+<info>php %command.full_name% doc/api_doc.md doc/postman.json</info>
 
 EOF
             );

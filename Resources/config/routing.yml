@@ -1,3 +1,15 @@
 kilix_api_core_doc:
     path:     /doc
     defaults: { _controller: KilixApiCoreBundle:Documentation:show }
+
+kilix_api_core_doc_blueprint:
+    path:     /doc/blueprint.json
+    defaults: { _controller: KilixApiCoreBundle:Documentation:blueprint }
+
+kilix_api_core_doc_markdown:
+    path:     /doc/source.md
+    defaults: { _controller: KilixApiCoreBundle:Documentation:source }
+
+kilix_api_core_doc_postman:
+    path:     /doc/postman.json
+    defaults: { _controller: KilixApiCoreBundle:Documentation:postman }

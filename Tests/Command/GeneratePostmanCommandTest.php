@@ -21,7 +21,7 @@ class GeneratePostmanCommandTest extends WebTestCase
         $rootDir = realpath(static::$kernel->getRootDir().'/../');
 
         $fs = new Filesystem();
-        $fs->remove($rootDir.'/doc/postman_collection.json');
+        $fs->remove($rootDir.'/doc/postman.json');
 
         $application = new Application(static::$kernel);
         $application->add(new GeneratePostmanCommand());
@@ -32,8 +32,8 @@ class GeneratePostmanCommandTest extends WebTestCase
             'command' => $command->getName(),
         ), array('verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE));
 
-        $this->assertRegExp('#API Postman collection generated to '.$rootDir.'/doc/postman_collection.json#', $commandTester->getDisplay());
-        $this->assertFileExists($rootDir.'/doc/postman_collection.json');
+        $this->assertRegExp('#API Postman collection generated to '.$rootDir.'/doc/postman.json#', $commandTester->getDisplay());
+        $this->assertFileExists($rootDir.'/doc/postman.json');
     }
 
     public function testExecuteWithApiary2Postman()
@@ -41,7 +41,7 @@ class GeneratePostmanCommandTest extends WebTestCase
         $rootDir = realpath(static::$kernel->getRootDir().'/../');
 
         $fs = new Filesystem();
-        $fs->remove($rootDir.'/doc/postman_collection.json');
+        $fs->remove($rootDir.'/doc/postman.json');
 
         $application = new Application(static::$kernel);
         $application->add(new GeneratePostmanCommand());
@@ -53,11 +53,10 @@ class GeneratePostmanCommandTest extends WebTestCase
             '--converter' => 'apiary2postman',
         ), array('verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE));
 
-        $this->assertRegExp('#API Postman collection generated to '.$rootDir.'/doc/postman_collection.json#', $commandTester->getDisplay());
-        $this->assertFileExists($rootDir.'/doc/postman_collection.json');
+        $this->assertRegExp('#API Postman collection generated to '.$rootDir.'/doc/postman.json#', $commandTester->getDisplay());
+        $this->assertFileExists($rootDir.'/doc/postman.json');
     }
 
-    /**/
     public function testExecuteCustomOutput()
     {
         $rootDir = realpath(static::$kernel->getRootDir().'/../');
@@ -90,7 +89,7 @@ class GeneratePostmanCommandTest extends WebTestCase
         $rootDir = realpath(static::$kernel->getRootDir().'/../');
 
         $fs = new Filesystem();
-        $fs->remove($rootDir.'/doc/postman_collection.json');
+        $fs->remove($rootDir.'/doc/postman.json');
 
         $application = new Application(static::$kernel);
         $application->add(new GeneratePostmanCommand());
@@ -103,6 +102,6 @@ class GeneratePostmanCommandTest extends WebTestCase
         ), array('verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE));
 
         $this->assertRegExp('#API Postman collection generation failed :\s*Main Input file '.$rootDir.'/doc/foobar.md doesn\'t exists#', $commandTester->getDisplay());
-        $this->assertFileNotExists($rootDir.'/doc/postman_collection.json');
+        $this->assertFileNotExists($rootDir.'/doc/postman.json');
     }
 }

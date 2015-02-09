@@ -22,6 +22,12 @@ class ConcatenateBlueprintCommand extends ContainerAwareCommand
             ->addArgument('input', InputArgument::OPTIONAL, 'main or first blueprint markdown file', 'doc/api_doc.md')
             ->addArgument('output', InputArgument::OPTIONAL, 'output Blueprint Markdown file', 'doc/api_doc_full.md')
             ->addOption(
+                'replace',
+                'r',
+                InputOption::VALUE_NONE,
+                'replace patterns'
+            )
+            ->addOption(
                 'resources-dir',
                 'd',
                 InputOption::VALUE_REQUIRED,
@@ -63,6 +69,7 @@ EOF
                 }
             }
 
+            $useReplace = $input->getOption('replace');
             $resourceDir = $input->getOption('resources-dir');
 
             if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
@@ -73,7 +80,7 @@ EOF
 
             $outputMD = $projectDir.'/'.$input->getArgument('output');
 
-            $result = $blueprintManager->concatenateDoc($mainBlueprint, $outputMD, $resourceDir, $output);
+            $result = $blueprintManager->concatenateDoc($mainBlueprint, $outputMD, $resourceDir, $useReplace, $output);
 
             $output->writeln('Blueprint markdown Concatenated to <info>'.$result.'<info>');
         } catch (\Exception $e) {

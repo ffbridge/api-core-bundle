@@ -36,6 +36,27 @@ class ConcatenateBlueprintCommandTest extends WebTestCase
         $this->assertFileExists($rootDir.'/doc/api_doc_full.md');
     }
 
+    public function testExecuteWithReplace()
+    {
+        $rootDir = realpath(static::$kernel->getRootDir().'/../');
+
+        $fs = new Filesystem();
+        $fs->remove($rootDir.'/doc/api_doc_full.md');
+
+        $application = new Application(static::$kernel);
+        $application->add(new ConcatenateBlueprintCommand());
+
+        $command = $application->find('api:concatenate:doc');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(array(
+            'command' => $command->getName(),
+            '--replace' => true,
+        ), array('verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE));
+
+        $this->assertRegExp('#Blueprint markdown Concatenated to '.$rootDir.'/doc/api_doc_full.md#', $commandTester->getDisplay());
+        $this->assertFileExists($rootDir.'/doc/api_doc_full.md');
+    }
+
     public function testExecuteCustomOutput()
     {
         $rootDir = realpath(static::$kernel->getRootDir().'/../');
