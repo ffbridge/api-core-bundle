@@ -16,4 +16,9 @@ class ApiParameters
      * @var bool
      */
     public $validation;
+
+    /**
+     * @var string Name for the parameterBag
+     */
+    public $as;
 }

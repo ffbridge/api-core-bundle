@@ -41,6 +41,11 @@ class ApiParametersListener
             $request->attributes->remove('_api_validation');
         }
 
+        if ($request->attributes->has('_api_as')) {
+            $apiBagName = $request->attributes->get('_api_as');
+            $request->attributes->remove('_api_as');
+        }
+
         if (is_array($controller = $event->getController())) {
             $object = new \ReflectionObject($controller[0]);
             $method = $object->getMethod($controller[1]);
@@ -49,6 +54,10 @@ class ApiParametersListener
                 if ($configuration instanceof ApiParameters) {
                     if (isset($configuration->bag)) {
                         $apiBagClass = $configuration->bag;
+                    }
+
+                    if (isset($configuration->as)) {
+                        $apiBagName = $configuration->as;
                     }
 
                     if (isset($configuration->validation)) {
@@ -61,7 +70,7 @@ class ApiParametersListener
         if (!empty($apiBagClass)) {
             $apiParameterBag = class_exists($apiBagClass) ? new $apiBagClass() : new ApiParameterBag();
             $apiParameterBag->populateFromRequest($request);
-            $request->attributes->set('api_parameters', $apiParameterBag);
+            $request->attributes->set(isset($apiBagName) ? $apiBagName : 'api_parameters', $apiParameterBag);
 
             if ($apiValidation) {
                 $errors = $this->validator->validate($apiParameterBag);

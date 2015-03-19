@@ -13,3 +13,11 @@ example3_api:
 example4_api:
     path:     /example/api/ws-annotations-validation
     defaults: { _controller: ExampleBundle:Api:ws3 }
+
+example5_api:
+    path:     /example/api/ws-annotations-as
+    defaults: { _controller: ExampleBundle:Api:ws4 }
+
+example6_api:
+    path: /example/api/ws-routing-as
+    defaults: { _controller: ExampleBundle:Api:ws5 , _api_bag: Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleApiParameterBag, _api_as: apiParam }

@@ -90,4 +90,32 @@ class ExampleApiControllerTest extends WebTestCase
             $response->getContent()
         );
     }
+
+    public function testAnnotationsAsParam()
+    {
+        $client = static::createClient();
+
+        $client->request('POST', '/example/api/ws-annotations-as?page=1&max=20&sort=name', array('created_at' => '2014-01-01'));
+        $response = $client->getResponse();
+        $this->assertEquals(array(
+                'page' => '1',
+                'max' => '20',
+                'sort' => 'name',
+                'created_at' => '2014-01-01',
+            ), json_decode($response->getContent(), true));
+    }
+    
+    public function testRoutinAsParam()
+    {
+        $client = static::createClient();
+
+        $client->request('POST', '/example/api/ws-routing-as?page=1&max=20&sort=name', array('created_at' => '2014-01-01'));
+        $response = $client->getResponse();
+        $this->assertEquals(array(
+                'page' => '1',
+                'max' => '20',
+                'sort' => 'name',
+                'created_at' => '2014-01-01',
+            ), json_decode($response->getContent(), true));
+    }
 }
