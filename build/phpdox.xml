@@ -1,0 +1,15 @@
+<phpdox xmlns="http://phpdox.net/config">
+    <project name="Kilix API Core Bundle" source="." workdir="build/phpdox">
+        <collector publiconly="false">
+            <include mask="*.php"/>
+            <exclude mask="**/vendor/*"/>
+            <exclude mask="**/build/*"/>
+        </collector>
+
+        <generator output="build">
+            <build engine="html" enabled="true" output="api">
+                <file extension="html"/>
+            </build>
+        </generator>
+    </project>
+</phpdox>
