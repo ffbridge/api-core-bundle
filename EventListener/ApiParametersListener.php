@@ -8,6 +8,7 @@ use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Kilix\Bundle\ApiCoreBundle\Annotations\ApiParameters;
 use Symfony\Component\Validator\ValidatorInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ApiParametersListener
 {
@@ -76,10 +77,11 @@ class ApiParametersListener
                 $errors = $this->validator->validate($apiParameterBag);
                 if (count($errors) > 0) {
                     $errorsList = array();
-                    foreach ($errors as $error) {
-                        $key = preg_replace('/parameters\[(.+)\]/', '$1', $error->getPropertyPath());
+                    $accessor = PropertyAccess::createPropertyAccessor();
 
-                        $errorsList[$key] = $error->getMessage();
+                    foreach ($errors as $error) {
+                        $key = preg_replace('/parameters(\[(.+)\])+/', '$1',$error->getPropertyPath());
+                        $accessor->setValue($errorsList, $key, $error->getMessage());
                     }
 
                     $request->attributes->set('_api_errors', $errorsList);

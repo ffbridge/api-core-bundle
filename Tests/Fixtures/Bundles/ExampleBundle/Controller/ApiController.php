@@ -58,4 +58,13 @@ class ApiController extends Controller
     {
         return new JsonResponse($apiParam->all());
     }
+
+    /**
+     * @param  Request      $request
+     * @return JsonResponse
+     */
+    public function subCollectionAction(Request $request, $apiParam)
+    {
+        return new JsonResponse($apiParam->all());
+    }
 }
