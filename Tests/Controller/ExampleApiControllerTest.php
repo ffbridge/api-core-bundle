@@ -128,10 +128,6 @@ class ExampleApiControllerTest extends WebTestCase
             )
         );
 
-        $kernel = $client->getKernel();
-
-        //print_r($kernel->getContainer()->get('kilix_api_core.content_type_listener'));
-
         $client->request(
             'POST', 
             '/example/api/sub-collection-test', 
@@ -150,7 +146,6 @@ class ExampleApiControllerTest extends WebTestCase
             )
         );
 
-        print_r($data);
         $this->assertEquals($errorData, $data);
     }
 }
