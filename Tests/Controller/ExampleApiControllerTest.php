@@ -104,7 +104,7 @@ class ExampleApiControllerTest extends WebTestCase
                 'created_at' => '2014-01-01',
             ), json_decode($response->getContent(), true));
     }
-    
+
     public function testRoutinAsParam()
     {
         $client = static::createClient();

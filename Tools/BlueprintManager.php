@@ -11,7 +11,7 @@ use Symfony\Component\Finder\Finder;
 class BlueprintManager
 {
     /**
-     * Possible Blueprint to postman converters
+     * Possible Blueprint to postman converters.
      *
      * @var array
      */
@@ -21,35 +21,35 @@ class BlueprintManager
     );
 
     /**
-     * aglio bin path
+     * aglio bin path.
      *
      * @var string
      */
     protected $aglioBin;
 
     /**
-     * snowcrash bin path
+     * snowcrash bin path.
      *
      * @var string
      */
     protected $snowcrashBin;
 
     /**
-     * apiary2postman bin path
+     * apiary2postman bin path.
      *
      * @var string
      */
     protected $apiary2postmanBin;
 
     /**
-     * blueman Bin bin path
+     * blueman Bin bin path.
      *
      * @var string
      */
     protected $bluemanBin;
 
     /**
-     * Postman Converter to use by default
+     * Postman Converter to use by default.
      *
      * @var string
      */
@@ -93,7 +93,8 @@ class BlueprintManager
     }
 
     /**
-     * @param  OutputInterface $output
+     * @param OutputInterface $output
+     *
      * @return array
      */
     public function getAvailableTemplates(OutputInterface $output = null)
@@ -104,10 +105,11 @@ class BlueprintManager
     /**
      * @param $mainBlueprint
      * @param $outputHtml
-     * @param  bool            $concat
-     * @param  string          $resourceDir
-     * @param  null            $template
-     * @param  OutputInterface $output
+     * @param bool            $concat
+     * @param string          $resourceDir
+     * @param null            $template
+     * @param OutputInterface $output
+     *
      * @return string
      */
     public function generateDoc($mainBlueprint, $outputHtml, $concat = false, $resourceDir = 'doc/api', $template = null, OutputInterface $output = null)
@@ -173,11 +175,12 @@ class BlueprintManager
     /**
      * @param $mainBlueprint
      * @param $outputHtml
-     * @param  string          $format
-     * @param  bool            $concat
-     * @param  bool            $replace
-     * @param  string          $resourceDir
-     * @param  OutputInterface $output
+     * @param string          $format
+     * @param bool            $concat
+     * @param bool            $replace
+     * @param string          $resourceDir
+     * @param OutputInterface $output
+     *
      * @return string
      */
     public function generateBlueprint($mainBlueprint, $outputHtml, $format = 'json', $concat = false, $replace = true, $resourceDir = 'doc/api', OutputInterface $output = null)
@@ -206,9 +209,10 @@ class BlueprintManager
     /**
      * @param $mainBlueprint
      * @param $target
-     * @param string $resourceDir
-     * @param bool $replace
+     * @param string          $resourceDir
+     * @param bool            $replace
      * @param OutputInterface $output
+     *
      * @return string
      */
     public function concatenateDoc($mainBlueprint, $target, $resourceDir = 'doc/api', $replace = true, OutputInterface $output = null)
@@ -230,10 +234,11 @@ class BlueprintManager
     }
 
     /**
-     * @param  string          $mainFile
-     * @param  string          $resourceDir
-     * @param  null            $target
-     * @param  OutputInterface $output
+     * @param string          $mainFile
+     * @param string          $resourceDir
+     * @param null            $target
+     * @param OutputInterface $output
+     *
      * @return string
      */
     protected function concatFiles($mainFile, $resourceDir = 'doc/api', $target = null, OutputInterface $output = null)
@@ -305,8 +310,9 @@ class BlueprintManager
     }
 
     /**
-     * @param  string          $command
-     * @param  OutputInterface $output
+     * @param string          $command
+     * @param OutputInterface $output
+     *
      * @return Process
      */
     protected function execute($bin, $command, OutputInterface $output = null)
@@ -327,7 +333,8 @@ class BlueprintManager
 
     /**
      * @param $file
-     * @param  bool   $inFile
+     * @param bool $inFile
+     *
      * @return string filename
      */
     protected function replacePatterns($file, $inFile = false)

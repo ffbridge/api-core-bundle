@@ -35,7 +35,7 @@ class DocumentationController extends Controller
         }
 
         return new Response(file_get_contents($target), 200, array(
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
         ));
     }
 
@@ -51,7 +51,7 @@ class DocumentationController extends Controller
         }
 
         return new Response(file_get_contents($target), 200, array(
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
         ));
     }
 
@@ -67,7 +67,7 @@ class DocumentationController extends Controller
         }
 
         return new Response(file_get_contents($target), 200, array(
-            'Content-Type' => 'text/x-markdown'
+            'Content-Type' => 'text/x-markdown',
         ));
     }
 }

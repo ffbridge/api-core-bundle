@@ -10,8 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Class ConcatenateBlueprintCommand
- * @package Kilix\Bundle\ApiCoreBundle\Command
+ * Class ConcatenateBlueprintCommand.
  */
 class ConcatenateBlueprintCommand extends ContainerAwareCommand
 {
@@ -49,8 +48,9 @@ EOF
     }
 
     /**
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
      * @return int|null|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)

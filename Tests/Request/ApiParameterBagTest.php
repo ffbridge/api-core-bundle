@@ -23,30 +23,56 @@ class ApiParameterBagTest extends \PHPUnit_Framework_TestCase
         $this->extendedBag = new TestApiParameterBag();
     }
 
-    public function testPopulateFromRequest()
+    /**
+     * @dataProvider providerPopulateFromRequest
+     */
+    public function testPopulateFromRequest($get, $post, $headers, $expected, $extended = false)
     {
         $request = new Request();
-        $request->query->add(array('bar' => 'a', 'id' => 1));
-        $request->request->add(array('foo' => 'b', 'content' => 'lorem'));
-        $request->headers->add(array('sort' => '-id', 'foobar' => 'lorem'));
+        $request->query->add($get);
+        $request->request->add($post);
+        $request->headers->add($headers);
 
-        $this->bag->populateFromRequest($request);
-        $this->extendedBag->populateFromRequest($request);
+        $bag = $extended ? $this->extendedBag : $this->bag;
+        $bag->populateFromRequest($request);
 
-        $this->assertEquals(array(
-            'bar' => 'a',
-            'id' => 1,
-            'foo' => 'b',
-            'content' => 'lorem',
-            'sort' => '-id',
-            'foobar' => 'lorem',
-        ), $this->bag->all());
+        $this->assertEquals($expected, $bag->all());
+    }
 
-        $this->assertEquals(array(
-            'bar' => 'a',
-            'foo' => 'b',
-            'sort' => '-id',
-        ), $this->extendedBag->all());
+    /**
+     * @dataProvider
+     */
+    public function providerPopulateFromRequest()
+    {
+        return array(
+            // dataset #0
+            array(
+                array('bar' => 'a', 'id' => 1),
+                array('foo' => 'b', 'content' => 'lorem'),
+                array('sort' => '-id', 'foobar' => 'lorem'),
+                array(
+                    'bar' => 'a',
+                    'id' => 1,
+                    'foo' => 'b',
+                    'content' => 'lorem',
+                    'sort' => '-id',
+                    'foobar' => 'lorem',
+                ),
+                false,
+            ),
+            // dataset #1
+            array(
+                array('bar' => 'a', 'id' => 1),
+                array('foo' => 'b', 'content' => 'lorem'),
+                array('sort' => '-id', 'foobar' => 'lorem'),
+                array(
+                    'bar' => 'a',
+                    'foo' => 'b',
+                    'sort' => '-id',
+                ),
+                true,
+            ),
+        );
     }
 }
 
