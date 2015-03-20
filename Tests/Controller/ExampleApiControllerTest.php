@@ -118,4 +118,34 @@ class ExampleApiControllerTest extends WebTestCase
                 'created_at' => '2014-01-01',
             ), json_decode($response->getContent(), true));
     }
+    public function testErrorsWithSubCollections()
+    {
+        $client = static::createClient();
+
+        $postArray = array(
+            'filters' => array(
+                'lastname' => 'test'
+            )
+        );
+
+        $client->request(
+            'POST', 
+            '/example/api/sub-collection-test', 
+            $postArray
+        );
+
+        $response = $client->getResponse();
+        $data = json_decode($response->getContent(), true);
+
+        $errorData = array(
+            'errors' => array(
+                'page' => 'search.missing_fields',
+                'filters' => array(
+                    'firstname' => 'filter.missing_fields'
+                )
+            )
+        );
+
+        $this->assertEquals($errorData, $data);
+    }
 }

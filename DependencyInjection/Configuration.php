@@ -3,6 +3,7 @@
 namespace Kilix\Bundle\ApiCoreBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
@@ -38,6 +39,25 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('blueman_bin')->defaultValue('/usr/local/bin/blueman')->end()
             ->end();
 
+        $this->addContentTypeListenerSection($rootNode);
         return $treeBuilder;
+    }
+
+    private function addContentTypeListenerSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('content_type_listener')
+                    ->fixXmlConfig('decoder', 'decoders')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('decoders')
+                            ->defaultValue(array('json' => 'kilix_api_core.decoder.json'))
+                            ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+
     }
 }

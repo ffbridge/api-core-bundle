@@ -21,3 +21,11 @@ example5_api:
 example6_api:
     path: /example/api/ws-routing-as
     defaults: { _controller: ExampleBundle:Api:ws5 , _api_bag: Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleApiParameterBag, _api_as: apiParam }
+
+sub_coll_api:
+    path: /example/api/sub-collection-test
+    defaults: 
+        _controller: ExampleBundle:Api:subCollection 
+        _api_validation : true
+        _api_bag: Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleSubCollectionParameterBag
+        _api_as: apiParam

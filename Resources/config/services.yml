@@ -18,3 +18,18 @@ services:
         arguments: [@annotation_reader, @validator]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    kilix_api_core.decoder_provider:
+        class: Kilix\Bundle\ApiCoreBundle\Decoder\DecoderProvider
+        arguments: [%kilix_api_core.decoders%]
+        calls:
+            - [setContainer, [@service_container]]
+
+    kilix_api_core.decoder.json:
+        class: Kilix\Bundle\ApiCoreBundle\Decoder\JsonDecoder
+
+    kilix_api_core.content_type_listener:
+        class: Kilix\Bundle\ApiCoreBundle\EventListener\ContentTypeListener
+        arguments: [@kilix_api_core.decoder_provider]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
