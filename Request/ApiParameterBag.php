@@ -2,7 +2,7 @@
 
 namespace Kilix\Bundle\ApiCoreBundle\Request;
 
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 class ApiParameterBag extends ParameterBag implements ApiParameterBagInterface
