@@ -32,6 +32,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                     'blueman_bin' => '/usr/local/bin/blueman',
                     'default_postman_converter' => 'blueman',
                     'replacements' => array(),
+                    'content_type_listener' => array(
+                        'decoders' => array(
+                            'json' => 'kilix_api_core.decoder.json'
+                        )
+                    )
                 ),
             ),
             // dataset #1
@@ -42,6 +47,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                         'replacements' => array(
                             '%api_url%' => 'https://core.easi.local',
                         ),
+                        'content_type_listener' => array(
+                            'decoders' => array(
+                                'json' => 'kilix_api_core.decoder.json'
+                            )
+                        )
                     ),
                 ),
                 array(
@@ -53,6 +63,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                     'replacements' => array(
                         '%api_url%' => 'https://core.easi.local',
                     ),
+                    'content_type_listener' => array(
+                        'decoders' => array(
+                            'json' => 'kilix_api_core.decoder.json'
+                        )
+                    )
                 ),
             ),
         );

@@ -1,3 +1,19 @@
+Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleSubCollectionParameterBag:
+    properties:
+        parameters:
+            - Collection:
+                fields:
+                    page:
+                        - Type:
+                            type: numeric
+                    filters: 
+                        - Collection:
+                            fields:
+                                firstname: ~
+                                lastname: ~
+                            missingFieldsMessage: filter.missing_fields
+                missingFieldsMessage: search.missing_fields
+
 Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleApiParameterBag:
     properties:
         parameters:
@@ -20,19 +36,3 @@ Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleApiPa
                         - Date: ~
                 allowMissingFields: true
                 allowExtraFields: true
-
-Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleSubCollectionParameterBag:
-    properties:
-        parameters:
-            - Collection:
-                fields:
-                    filters: 
-                        - Collection:
-                            fields:
-                                firstname: 
-                                lastname: 
-                            missingFieldsMessage: filter.missing_fields
-                    page:
-                        - Type:
-                            type: numeric
-                missingFieldsMessage: search.missing_fields

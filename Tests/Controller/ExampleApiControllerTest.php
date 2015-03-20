@@ -127,11 +127,20 @@ class ExampleApiControllerTest extends WebTestCase
                 'lastname' => 'test'
             )
         );
-        $client->request('POST', '/example/api/sub-collection-test', $postArray);
+
+        $kernel = $client->getKernel();
+
+        //print_r($kernel->getContainer()->get('kilix_api_core.content_type_listener'));
+
+        $client->request(
+            'POST', 
+            '/example/api/sub-collection-test', 
+            $postArray
+        );
+
         $response = $client->getResponse();
         $data = json_decode($response->getContent(), true);
 
-        print_r($data);
         $errorData = array(
             'errors' => array(
                 'page' => 'search.missing_fields',
@@ -140,6 +149,8 @@ class ExampleApiControllerTest extends WebTestCase
                 )
             )
         );
+
+        print_r($data);
         $this->assertEquals($errorData, $data);
     }
 }
