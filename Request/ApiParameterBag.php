@@ -5,34 +5,10 @@ namespace Kilix\Bundle\ApiCoreBundle\Request;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
-class ApiParameterBag extends ParameterBag
+class ApiParameterBag extends ParameterBag implements ApiParameterBagInterface
 {
-    const PARAMETERS_TYPE_ATTRIBUTES = 'attributes';
-    const PARAMETERS_TYPE_HEADERS = 'headers';
-    const PARAMETERS_TYPE_QUERY = 'query';
-    const PARAMETERS_TYPE_GET = 'query';
-    const PARAMETERS_TYPE_REQUEST = 'request';
-    const PARAMETERS_TYPE_POST = 'request';
-    const PARAMETERS_TYPE_FILES = 'files';
-    const PARAMETERS_TYPE_COOKIES = 'cookies';
-
     /**
-     * @return array
-     */
-    private function getAllowedTypes()
-    {
-        return array(
-            static::PARAMETERS_TYPE_HEADERS,
-            static::PARAMETERS_TYPE_QUERY,
-            static::PARAMETERS_TYPE_REQUEST,
-            static::PARAMETERS_TYPE_COOKIES,
-            static::PARAMETERS_TYPE_FILES,
-            static::PARAMETERS_TYPE_ATTRIBUTES,
-        );
-    }
-
-    /**
-     * override this method to customize which request parameters bags will be used
+     * override this method to customize which request parameters bags will be used.
      *
      * @return array
      */
@@ -46,7 +22,7 @@ class ApiParameterBag extends ParameterBag
     }
 
     /**
-     * override this methods to select only some parameters key
+     * override this methods to select only some parameters key.
      *
      * @return array
      */
@@ -56,12 +32,49 @@ class ApiParameterBag extends ParameterBag
     }
 
     /**
+     * prepare all keys to filter before filtering Request.
+     *
+     * @return array
+     */
+    protected function prepareFilteredKeys()
+    {
+        return $this->getFilteredKeys();
+    }
+
+    /**
+     * apply some processing to Request before reading API Parameters from Request.
+     *
+     * @param Request $request
+     */
+    protected function prePopulate(Request $request)
+    {
+    }
+
+    /**
+     * apply some processing to Request after populating API Parameters from Request.
+     *
+     * @param Request $request
+     */
+    protected function postPopulate(Request $request)
+    {
+    }
+
+    /**
      * @param Request $request
      */
     public function populateFromRequest(Request $request)
     {
-        $filteredKeys = $this->getFilteredKeys();
-        $allowedTypes = $this->getAllowedTypes();
+        $filteredKeys = $this->prepareFilteredKeys();
+        $allowedTypes = array(
+            static::PARAMETERS_TYPE_HEADERS,
+            static::PARAMETERS_TYPE_QUERY,
+            static::PARAMETERS_TYPE_REQUEST,
+            static::PARAMETERS_TYPE_COOKIES,
+            static::PARAMETERS_TYPE_FILES,
+            static::PARAMETERS_TYPE_ATTRIBUTES,
+        );
+
+        $this->prePopulate($request);
 
         foreach ($this->getFilteredType() as $type) {
             if (in_array($type, $allowedTypes)) {
@@ -78,5 +91,7 @@ class ApiParameterBag extends ParameterBag
                 $this->add($params);
             }
         }
+
+        $this->postPopulate($request);
     }
 }
