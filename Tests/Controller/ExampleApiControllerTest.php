@@ -20,6 +20,48 @@ class ExampleApiControllerTest extends WebTestCase
         ), json_decode($response->getContent(), true));
     }
 
+    public function testRoutingApiParametersWithJson()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'POST',
+            '/example/api/ws-route?page=1&max=20&sort=name',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{"created_at":"2014-01-01"}'
+        );
+
+        $response = $client->getResponse();
+        $this->assertEquals(array(
+            'page' => '1',
+            'max' => '20',
+            'sort' => 'name',
+            'created_at' => '2014-01-01',
+        ), json_decode($response->getContent(), true));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Invalid json message received
+     */
+    public function testRoutingApiParametersWithMalformedJson()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'POST',
+            '/example/api/ws-route?page=1&max=20&sort=name',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{"created_at":"2014-01-01'
+        );
+
+        $response = $client->getResponse();
+    }
+
     public function testRoutingApiParametersWithValidation()
     {
         $client = static::createClient();
@@ -118,6 +160,7 @@ class ExampleApiControllerTest extends WebTestCase
                 'created_at' => '2014-01-01',
             ), json_decode($response->getContent(), true));
     }
+
     public function testErrorsWithSubCollections()
     {
         $client = static::createClient();

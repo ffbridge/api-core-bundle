@@ -40,7 +40,6 @@ class ContentTypeListener
                 $decoder = $this->decoderProvider->getDecoder($format);
                 $data = $decoder->decode($content);
 
-                print_r($data);
                 if (is_array($data)) {
                     $request->request = new ParameterBag($data);
                 } else {
