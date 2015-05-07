@@ -4,7 +4,7 @@ This part is strongly inspired by this [angular repository](https://github.com/b
 
 To understand the mechanics, it is recommended to read the documentation and the demo of this repository
 
-To insert the right Link header with CORS, you can use the ```php Kilix\Bundle\ApiCoreBundle\Request\PaginatedResponse``` class.
+To insert the right Link header with CORS, you can use the ```Kilix\Bundle\ApiCoreBundle\Request\PaginatedResponse``` class.
 
 You just have to give it some HTTP headers with data given by the input request :
 
