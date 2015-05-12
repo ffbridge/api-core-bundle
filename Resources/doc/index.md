@@ -46,3 +46,8 @@ class AppKernel extends Kernel
     // ...
 }
 ```
+
+Documentation
+------------
+
+* [Pagination](pagination.md)
