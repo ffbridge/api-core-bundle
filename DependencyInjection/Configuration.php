@@ -40,6 +40,7 @@ class Configuration implements ConfigurationInterface
             ->end();
 
         $this->addContentTypeListenerSection($rootNode);
+
         return $treeBuilder;
     }
 
@@ -58,6 +59,5 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
-
     }
 }

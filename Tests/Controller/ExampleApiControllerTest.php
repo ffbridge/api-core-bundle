@@ -167,13 +167,13 @@ class ExampleApiControllerTest extends WebTestCase
 
         $postArray = array(
             'filters' => array(
-                'lastname' => 'test'
-            )
+                'lastname' => 'test',
+            ),
         );
 
         $client->request(
-            'POST', 
-            '/example/api/sub-collection-test', 
+            'POST',
+            '/example/api/sub-collection-test',
             $postArray
         );
 
@@ -184,9 +184,9 @@ class ExampleApiControllerTest extends WebTestCase
             'errors' => array(
                 'page' => 'search.missing_fields',
                 'filters' => array(
-                    'firstname' => 'filter.missing_fields'
-                )
-            )
+                    'firstname' => 'filter.missing_fields',
+                ),
+            ),
         );
 
         $this->assertEquals($errorData, $data);

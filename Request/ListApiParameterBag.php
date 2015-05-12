@@ -116,7 +116,7 @@ class ListApiParameterBag extends ApiParameterBag
      */
     public function getPage()
     {
-        return ($this->limit > 0 ? (int) ($this->offset/$this->limit) : 0) + 1;
+        return ($this->limit > 0 ? (int) ($this->offset / $this->limit) : 0) + 1;
     }
 
     /**

@@ -80,7 +80,7 @@ class ApiParametersListener
                     $accessor = PropertyAccess::createPropertyAccessor();
 
                     foreach ($errors as $error) {
-                        $key = preg_replace('/parameters(\[(.+)\])+/', '$1',$error->getPropertyPath());
+                        $key = preg_replace('/parameters(\[(.+)\])+/', '$1', $error->getPropertyPath());
                         $accessor->setValue($errorsList, $key, $error->getMessage());
                     }
 

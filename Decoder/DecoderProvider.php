@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 class DecoderProvider extends containerAware
 {
     private $decoders;
-    
+
     /**
      * Constructor.
      *
@@ -31,11 +31,12 @@ class DecoderProvider extends containerAware
     }
 
     /**
-     * Provides a docder for a supported format  
+     * Provides a docder for a supported format.
      *
      * @param string $format
      *
      * @return \Kilix\Bundle\ApiCoreBundle\DecoderInterface
+     *
      * @throws \InvalidArgumentException
      */
     public function getDecoder($format)
@@ -45,6 +46,7 @@ class DecoderProvider extends containerAware
                 sprintf("Format '%s' is not supported by %s.", $format, __CLASS__)
             );
         }
+
         return $this->container->get($this->decoders[$format]);
     }
 }

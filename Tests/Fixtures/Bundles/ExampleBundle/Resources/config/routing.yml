@@ -24,8 +24,8 @@ example6_api:
 
 sub_coll_api:
     path: /example/api/sub-collection-test
-    defaults: 
-        _controller: ExampleBundle:Api:subCollection 
+    defaults:
+        _controller: ExampleBundle:Api:subCollection
         _api_validation : true
         _api_bag: Kilix\Bundle\ApiCoreBundle\Tests\Fixtures\Bundles\ExampleBundle\Api\ExampleSubCollectionParameterBag
         _api_as: apiParam

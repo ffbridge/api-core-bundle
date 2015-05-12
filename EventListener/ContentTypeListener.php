@@ -16,7 +16,7 @@ class ContentTypeListener
     }
 
     /**
-     * @param  GetResponseEvent $event kernel.request event
+     * @param GetResponseEvent $event kernel.request event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -24,8 +24,7 @@ class ContentTypeListener
         $method = $request->getMethod();
         $contentType = $request->headers->get('Content-Type');
 
-        if(in_array($method, array('POST', 'PUT', 'PATCH'))) {
-            
+        if (in_array($method, array('POST', 'PUT', 'PATCH'))) {
             $format = null === $contentType
                 ? $request->getRequestFormat()
                 : $request->getFormat($contentType);

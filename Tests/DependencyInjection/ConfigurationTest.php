@@ -34,9 +34,9 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                     'replacements' => array(),
                     'content_type_listener' => array(
                         'decoders' => array(
-                            'json' => 'kilix_api_core.decoder.json'
-                        )
-                    )
+                            'json' => 'kilix_api_core.decoder.json',
+                        ),
+                    ),
                 ),
             ),
             // dataset #1
@@ -49,9 +49,9 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                         ),
                         'content_type_listener' => array(
                             'decoders' => array(
-                                'json' => 'kilix_api_core.decoder.json'
-                            )
-                        )
+                                'json' => 'kilix_api_core.decoder.json',
+                            ),
+                        ),
                     ),
                 ),
                 array(
@@ -65,9 +65,9 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                     ),
                     'content_type_listener' => array(
                         'decoders' => array(
-                            'json' => 'kilix_api_core.decoder.json'
-                        )
-                    )
+                            'json' => 'kilix_api_core.decoder.json',
+                        ),
+                    ),
                 ),
             ),
         );

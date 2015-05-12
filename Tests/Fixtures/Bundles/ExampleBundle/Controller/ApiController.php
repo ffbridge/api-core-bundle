@@ -67,7 +67,8 @@ class ApiController extends Controller
     }
 
     /**
-     * @param  Request      $request
+     * @param Request $request
+     *
      * @return JsonResponse
      */
     public function subCollectionAction(Request $request, $apiParam)

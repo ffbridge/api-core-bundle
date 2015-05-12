@@ -31,7 +31,7 @@ class KilixApiCoreExtension extends Extension
         $container->setParameter('kilix_api_core.blueman_bin', $config['blueman_bin']);
         $container->setParameter('kilix_api_core.default_postman_converter', $config['default_postman_converter']);
 
-        $container->setParameter($this->getAlias() . '.decoders', $config['content_type_listener']['decoders']);
+        $container->setParameter($this->getAlias().'.decoders', $config['content_type_listener']['decoders']);
 
         $definition = $container->getDefinition('kilix_api_core.blueprint_manager');
         $definition->addArgument($config['replacements']);
