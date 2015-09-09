@@ -12,16 +12,16 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class SnowcrashFakeCommand extends Command
+class DrafterFakeCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('snowcrash')
-            ->setDescription('Fake snowcrash executable')
+            ->setName('drafter')
+            ->setDescription('Fake drafter executable')
             ->addArgument('input', InputArgument::REQUIRED, 'input Blueprint Markdown')
             ->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'output Blueprint AST file', 'blueprint.apib')
-            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'format ', 'yaml')
+            ->addOption('format', 'f', InputOption::VALUE_REQUIRED, 'format ', 'yaml')
             ;
     }
 
@@ -38,5 +38,5 @@ class SnowcrashFakeCommand extends Command
 }
 
 $application = new Application();
-$application->add(new SnowcrashFakeCommand);
+$application->add(new DrafterFakeCommand);
 $application->run();

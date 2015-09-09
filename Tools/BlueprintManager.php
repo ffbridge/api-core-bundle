@@ -28,11 +28,11 @@ class BlueprintManager
     protected $aglioBin;
 
     /**
-     * snowcrash bin path.
+     * blueprint parser bin path.
      *
      * @var string
      */
-    protected $snowcrashBin;
+    protected $blueprintParserBin;
 
     /**
      * apiary2postman bin path.
@@ -73,17 +73,17 @@ class BlueprintManager
     /**
      * @param $kernel
      * @param $aglioBin
-     * @param $snowcrashBin
+     * @param $blueprintParserBin
      * @param $apiary2postmanBin
      * @param $bluemanBin
      * @param string $defaultPostmanConverter
      * @param array  $replacements
      * @param string $relativeProjectDir
      */
-    public function __construct($kernel, $aglioBin, $snowcrashBin, $apiary2postmanBin, $bluemanBin, $defaultPostmanConverter = 'blueman', $replacements = array(), $relativeProjectDir = '/..')
+    public function __construct($kernel, $aglioBin, $blueprintParserBin, $apiary2postmanBin, $bluemanBin, $defaultPostmanConverter = 'blueman', $replacements = array(), $relativeProjectDir = '/..')
     {
         $this->aglioBin = $aglioBin;
-        $this->snowcrashBin = $snowcrashBin;
+        $this->blueprintParserBin = $blueprintParserBin;
         $this->apiary2postmanBin = $apiary2postmanBin;
         $this->bluemanBin = $bluemanBin;
         $this->defaultPostmanConverter = in_array($defaultPostmanConverter, static::$postmanConverters) ? $defaultPostmanConverter : 'blueman';
@@ -97,9 +97,19 @@ class BlueprintManager
      *
      * @return array
      */
-    public function getAvailableTemplates(OutputInterface $output = null)
+    public function getAvailableTemplates()
     {
-        return explode("\n", trim(str_ireplace('Templates:', '', $this->executeAglio('-l', $output)->getOutput())));
+        return array(
+            'olio',
+            'default',
+            'default-collapsed',
+            'flatly',
+            'flatly-collapsed',
+            'slate',
+            'slate-collapsed',
+            'cyborg',
+            'cyborg-collapsed',
+        );
     }
 
     /**
@@ -125,13 +135,13 @@ class BlueprintManager
 
         $inputBlueprint = $this->replacePatterns($inputBlueprint);
 
-        if (!in_array($template, $this->getAvailableTemplates($output))) {
+        if (!in_array($template, $this->getAvailableTemplates())) {
             $template = 'default';
         }
 
         $inputBlueprint = $this->replacePatterns($inputBlueprint);
 
-        $result = $this->executeAglio('-t '.$template.' -i '.$inputBlueprint.' -o '.$outputHtml, $output);
+        $result = $this->executeAglio('--theme-template '.$template.' -i '.$inputBlueprint.' -o '.$outputHtml, $output);
         if ($concat && $mainBlueprint != $inputBlueprint) {
             $fs->remove($inputBlueprint);
         }
@@ -198,7 +208,7 @@ class BlueprintManager
             $inputBlueprint = $this->replacePatterns($inputBlueprint);
         }
 
-        $result = $this->executeSnowcrash(' -o '.$outputHtml.' --format '.$format.' '.$inputBlueprint, $output);
+        $result = $this->executeBlueprintParser(' -o '.$outputHtml.' --format '.$format.' '.$inputBlueprint, $output);
         if ($concat && $mainBlueprint != $inputBlueprint) {
             $fs->remove($inputBlueprint);
         }
@@ -294,9 +304,9 @@ class BlueprintManager
         return $this->execute($this->aglioBin, $command, $output);
     }
 
-    public function executeSnowcrash($command, OutputInterface $output = null)
+    public function executeBlueprintParser($command, OutputInterface $output = null)
     {
-        return $this->execute($this->snowcrashBin, $command, $output);
+        return $this->execute($this->blueprintParserBin, $command, $output);
     }
 
     public function executeApiary2Postman($command, OutputInterface $output = null)

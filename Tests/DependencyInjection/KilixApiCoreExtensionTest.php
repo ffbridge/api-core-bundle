@@ -14,7 +14,7 @@ class KilixApiCoreExtensionTest extends \PHPUnit_Framework_TestCase
         $loader->load(array(array()), $container);
 
         $this->assertEquals('/usr/bin/aglio', $container->getParameter('kilix_api_core.aglio_bin'));
-        $this->assertEquals('/usr/local/bin/snowcrash', $container->getParameter('kilix_api_core.snowcrash_bin'));
+        $this->assertEquals('/usr/local/bin/drafter', $container->getParameter('kilix_api_core.blueprint_parser_bin'));
         $this->assertEquals('/usr/local/bin/apiary2postman', $container->getParameter('kilix_api_core.apiary2postman_bin'));
         $this->assertEquals('/usr/local/bin/blueman', $container->getParameter('kilix_api_core.blueman_bin'));
     }

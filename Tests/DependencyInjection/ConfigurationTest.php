@@ -27,7 +27,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                 array(),
                 array(
                     'aglio_bin' => '/usr/bin/aglio',
-                    'snowcrash_bin' => '/usr/local/bin/snowcrash',
+                    'blueprint_parser_bin' => '/usr/local/bin/drafter',
                     'apiary2postman_bin' => '/usr/local/bin/apiary2postman',
                     'blueman_bin' => '/usr/local/bin/blueman',
                     'default_postman_converter' => 'blueman',
@@ -56,7 +56,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                 ),
                 array(
                     'aglio_bin' => '/usr/bin/aglio',
-                    'snowcrash_bin' => '/usr/local/bin/snowcrash',
+                    'blueprint_parser_bin' => '/usr/local/bin/drafter',
                     'apiary2postman_bin' => '/usr/local/bin/apiary2postman',
                     'blueman_bin' => '/usr/local/bin/blueman',
                     'default_postman_converter' => 'apiary2postman',

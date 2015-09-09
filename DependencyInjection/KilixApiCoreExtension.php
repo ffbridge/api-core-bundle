@@ -26,7 +26,7 @@ class KilixApiCoreExtension extends Extension
         $loader->load('services.yml');
 
         $container->setParameter('kilix_api_core.aglio_bin', $config['aglio_bin']);
-        $container->setParameter('kilix_api_core.snowcrash_bin', $config['snowcrash_bin']);
+        $container->setParameter('kilix_api_core.blueprint_parser_bin', $config['blueprint_parser_bin']);
         $container->setParameter('kilix_api_core.apiary2postman_bin', $config['apiary2postman_bin']);
         $container->setParameter('kilix_api_core.blueman_bin', $config['blueman_bin']);
         $container->setParameter('kilix_api_core.default_postman_converter', $config['default_postman_converter']);

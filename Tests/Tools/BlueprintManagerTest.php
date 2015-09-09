@@ -21,7 +21,7 @@ class BlueprintManagerTest extends WebTestCase
         $manager = new BlueprintManager(
             static::$kernel,
             __DIR__.'/Fixtures/bin/aglio_fake aglio',
-            __DIR__.'/Fixtures/bin/snowcrash_fake snowcrash',
+            __DIR__.'/Fixtures/bin/drafter_fake drafter',
             __DIR__.'/Fixtures/bin/apiary2postman_fake apiary2postman',
             array()
         );

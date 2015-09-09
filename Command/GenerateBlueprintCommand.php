@@ -22,7 +22,7 @@ class GenerateBlueprintCommand extends ContainerAwareCommand
                     'generate:api:blueprint',
                 )
             )
-            ->setDescription('generate Blueprint Abstract Syntax Tree from API blueprint markdown with snowcrash')
+            ->setDescription('generate Blueprint Abstract Syntax Tree from API blueprint markdown')
             ->addArgument('input', InputArgument::OPTIONAL, 'main or first blueprint markdown file', 'doc/api_doc.md')
             ->addArgument('output', InputArgument::OPTIONAL, 'output Blueprint file', 'doc/blueprint.json')
             ->addOption(

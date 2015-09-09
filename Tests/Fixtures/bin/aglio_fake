@@ -21,7 +21,7 @@ class AglioFakeCommand extends Command
             ->setDescription('Fake aglio executable')
             ->addOption('input', 'i', InputOption::VALUE_REQUIRED, 'input blueprint markdown file', 'api_doc.md')
             ->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'output HTML file', 'index.html')
-            ->addOption('template', 't', InputOption::VALUE_REQUIRED, 'template ', 'default')
+            ->addOption('theme-template', null, InputOption::VALUE_REQUIRED, 'template ', 'default')
             ->addOption('list', 'l', InputOption::VALUE_NONE, 'list template')
             ;
     }

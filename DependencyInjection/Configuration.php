@@ -34,7 +34,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('aglio_bin')->defaultValue('/usr/bin/aglio')->end()
-                ->scalarNode('snowcrash_bin')->defaultValue('/usr/local/bin/snowcrash')->end()
+                ->scalarNode('blueprint_parser_bin')->defaultValue('/usr/local/bin/drafter')->end()
                 ->scalarNode('apiary2postman_bin')->defaultValue('/usr/local/bin/apiary2postman')->end()
                 ->scalarNode('blueman_bin')->defaultValue('/usr/local/bin/blueman')->end()
             ->end();

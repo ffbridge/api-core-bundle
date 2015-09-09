@@ -8,7 +8,7 @@ services:
         arguments:
             - @kernel
             - %kilix_api_core.aglio_bin%
-            - %kilix_api_core.snowcrash_bin%
+            - %kilix_api_core.blueprint_parser_bin%
             - %kilix_api_core.apiary2postman_bin%
             - %kilix_api_core.blueman_bin%
             - %kilix_api_core.default_postman_converter%
