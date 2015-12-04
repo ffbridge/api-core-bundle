@@ -3,8 +3,11 @@ before_script:
   - docker info
   - docker version
   - docker-compose version
+  - whoami
+  - id -u $(whoami)
 
 build_image:
   script:
+    - docker-compose build
     # - docker-compose run --rm -e GITHUB_API_TOKEN=  php make install test
-    - docker-compose run --rm php make install test 
+    # - docker-compose run --rm php make install test
