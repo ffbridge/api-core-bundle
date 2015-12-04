@@ -1,0 +1,9 @@
+---
+before_script:
+  - docker info
+  - docker version
+  - docker-compose version
+
+build_image:
+  script:
+    - docker-compose run --rm -e GITHUB_API_TOKEN=  php make install test build -t my-docker-image .
