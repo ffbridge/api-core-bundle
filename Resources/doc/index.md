@@ -47,6 +47,26 @@ class AppKernel extends Kernel
 }
 ```
 
+Unit tests
+----------
+
+### with phpunit directly
+
+```bash
+composer install
+phpunit
+# or
+make install test
+```
+
+### with docker
+
+you need docker and docker-compose
+
+```bash
+docker run --rm e GITHUB_API_TOKEN=<your-private-github-api-token> php make install test
+```
+
 Documentation
 ------------
 
