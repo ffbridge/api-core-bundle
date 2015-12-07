@@ -38,12 +38,16 @@ COPY config/cli/php.ini /etc/php5/cli/php.ini
 COPY config/xdebug.sh /root/xdebug.sh
 RUN bash /root/xdebug.sh
 
-COPY docker-entrypoint.sh /entrypoint.sh
+RUN apt-get install -y sudo
 
-RUN chmod a+x /entrypoint.sh && chown root:root /entrypoint.sh
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 VOLUME /srv/api-core-bundle
 WORKDIR /srv/api-core-bundle
+
+COPY docker-entrypoint.sh /entrypoint.sh
+
+RUN chmod a+x /entrypoint.sh && chown root:root /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 
