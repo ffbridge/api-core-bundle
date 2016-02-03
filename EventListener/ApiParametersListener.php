@@ -7,8 +7,8 @@ use Kilix\Bundle\ApiCoreBundle\Request\ApiParameterBag;
 use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Kilix\Bundle\ApiCoreBundle\Annotations\ApiParameters;
-use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ApiParametersListener
 {
