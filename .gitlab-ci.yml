@@ -1,19 +1,15 @@
 ---
 stages:
-  - build
   - test
-
-cache:
-  untracked: true
-  paths:
-  - vendor/
-
-build_image:
-  stage: build
-  script:
-    - docker-compose build
 
 tests:
   stage: test
   script:
-    - make up-dkc
+    - make dk-build
+    - make dk-vendor
+    - make dk-test
+  cache:
+    key: "$CI_BUILD_REF_NAME"
+    untracked: true
+    paths:
+    - vendor

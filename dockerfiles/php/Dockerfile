@@ -5,7 +5,8 @@ RUN apt-get update && apt-get install -y \
     apt-transport-https \
     apt-utils \
     curl \
-    wget
+    wget \
+    ca-certificates
 
 RUN apt-get update && apt-get install -y \
     zip \
@@ -34,20 +35,25 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     wget -q http://get.sensiolabs.org/php-cs-fixer.phar -O /usr/local/bin/php-cs-fixer && \
     chmod a+x /usr/local/bin/php-cs-fixer
 
+RUN apt-get install -y sudo
+
+RUN echo "Europe/Paris" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
+
 COPY config/cli/php.ini /etc/php5/cli/php.ini
 COPY config/xdebug.sh /root/xdebug.sh
 RUN bash /root/xdebug.sh
 
-RUN apt-get install -y sudo
-
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+RUN mkdir -p /root/.ssh
+COPY config/ssh_config /root/.ssh/config
+COPY config/ssh_config /ssh_config
+
+COPY docker-entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh && chown root:root /entrypoint.sh
 
 VOLUME /srv/api-core-bundle
 WORKDIR /srv/api-core-bundle
-
-COPY docker-entrypoint.sh /entrypoint.sh
-
-RUN chmod a+x /entrypoint.sh && chown root:root /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 
