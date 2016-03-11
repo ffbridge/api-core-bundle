@@ -6,7 +6,7 @@ mkdir --parent $HOMEDIR
 chown -R $USERNAME:$GROUPNAME $HOMEDIR
 
 mkdir -p $HOMEDIR/.ssh/
-cp /ssh_config $HOMEDIR/.ssh/config
+cp /root/.ssh/config $HOMEDIR/.ssh/config
 
 if [ -n "$SSH_PRIVATE_KEY" ] ;then
     echo "$SSH_PRIVATE_KEY" > $HOMEDIR/.ssh/id_rsa
