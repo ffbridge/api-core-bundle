@@ -3,10 +3,9 @@ php:
     container_name: apicore_test
     volumes:
         - "./:/srv/api-core-bundle"
-        # - $SSH_AUTH_SOCK:/root/.ssh/ssh-agent
     environment:
-        # SSH_AUTH_SOCK: /root/.ssh/ssh-agent
-        CHECK_SSH_GITLAB: 0
+        SSH_PRIVATE_KEY:
+        SSH_PUBLIC_KEY:
         GITHUB_API_TOKEN:
         GROUP_ID: 1000
         USER_ID: 1000
