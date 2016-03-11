@@ -2,10 +2,13 @@
 
 namespace Kilix\Bundle\ApiCoreBundle\Decoder;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-class DecoderProvider extends containerAware
+class DecoderProvider implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     private $decoders;
 
     /**
