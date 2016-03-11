@@ -49,10 +49,6 @@ dk-vendor:
 
 dk-test:
 	$(ENV) $(DKC) run --rm -e GROUP_ID=$(GROUP_ID) -e USER_ID=$(USER_ID) -e GROUPNAME=$(GROUPNAME) -e USERNAME=$(USERNAME) -e HOMEDIR=$(HOMEDIR) -e GITHUB_API_TOKEN=$(GITHUB_API_TOKEN) php make test
-#$(ENV) $(DKC) run --rm -e GROUP_ID=$(GROUP_ID) -e USER_ID=$(USER_ID) -e GROUPNAME=$(GROUPNAME) -e USERNAME=$(USERNAME) -e HOMEDIR=$(HOMEDIR) nodejs npm test
-
-# dk-deploy:
-#	$(ENV) $(DKC) run --rm capistrano cap $(CAP_DEPLOY_ENV) deploy
 
 # unit and functional tests
 test:
