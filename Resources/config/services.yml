@@ -21,7 +21,7 @@ services:
 
     kilix_api_core.decoder_provider:
         class: Kilix\Bundle\ApiCoreBundle\Decoder\DecoderProvider
-        arguments: [%kilix_api_core.decoders%]
+        arguments: ["%kilix_api_core.decoders%"]
         calls:
             - [setContainer, ["@service_container"]]
 
