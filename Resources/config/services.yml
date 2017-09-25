@@ -4,17 +4,17 @@ parameters:
 
 services:
     kilix_api_core.blueprint_manager:
-        class: %kilix_api_core.blueprint_manager.class%
+        class: "%kilix_api_core.blueprint_manager.class%"
         arguments:
             - "@kernel"
-            - %kilix_api_core.aglio_bin%
-            - %kilix_api_core.blueprint_parser_bin%
-            - %kilix_api_core.apiary2postman_bin%
-            - %kilix_api_core.blueman_bin%
-            - %kilix_api_core.default_postman_converter%
+            - "%kilix_api_core.aglio_bin%"
+            - "%kilix_api_core.blueprint_parser_bin%"
+            - "%kilix_api_core.apiary2postman_bin%"
+            - "%kilix_api_core.blueman_bin%"
+            - "%kilix_api_core.default_postman_converter%"
 
     kilix_api_core.api_paramaters_listener:
-        class: %kilix_api_core.api_paramaters_listener.class%
+        class: "%kilix_api_core.api_paramaters_listener.class%"
         arguments: ["@annotation_reader", "@validator"]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
